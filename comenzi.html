@@ -1344,43 +1344,16 @@ async function processPDF(file) {
   document.getElementById('pdfFileName').textContent = file.name;
   document.getElementById('pdfStatus').textContent = 'Se procesează cu AI...';
   
-  // Convert to base64
   const base64 = await fileToBase64(file);
   
   try {
-    // Call Claude API with PDF
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://wpro-pdf-prox.wpro.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: [
-            {
-              type: 'document',
-              source: { type: 'base64', media_type: 'application/pdf', data: base64 }
-            },
-            {
-              type: 'text',
-              text: `Extrage din aceasta proforma/factura urmatoarele informatii si returneaza DOAR un JSON valid, fara text suplimentar:
-{
-  "client": "numele clientului",
-  "invoiceNo": "numarul documentului (proforma/factura)",
-  "products": [
-    {"name": "denumire produs", "qty": numar, "unit": "buc/colac/set/cutie/m/kg"}
-  ]
-}
-Daca nu gasesti un camp, pune string gol sau 0. Produsele trebuie extrase exact asa cum apar pe document.`
-            }
-          ]
-        }]
-      })
+      body: JSON.stringify({ pdfBase64: base64 })
     });
     
-    const data = await response.json();
-    const text = data.content[0].text.trim();
+    const text = await response.text();
     const clean = text.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
     
