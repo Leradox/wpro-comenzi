@@ -1352,39 +1352,42 @@ async function processPDF(file) {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
     
-    // Extract all text items with Y positions
-    const allItems = [];
+    // Process each page SEPARATELY to avoid cross-page line mixing
+    const allLines = [];
     for (let p = 1; p <= pdf.numPages; p++) {
       const page = await pdf.getPage(p);
       const content = await page.getTextContent();
+      const viewport = page.getViewport({ scale: 1 });
+      const pageWidth = viewport.width;
+      
+      // Group items by Y coordinate (per page)
+      const lineMap = {};
       for (const item of content.items) {
-        if (item.str.trim()) {
-          allItems.push({ str: item.str, y: Math.round(item.transform[5]), x: Math.round(item.transform[4]) });
-        }
+        if (!item.str.trim()) continue;
+        const y = Math.round(item.transform[5]);
+        const x = Math.round(item.transform[4]);
+        if (!lineMap[y]) lineMap[y] = [];
+        lineMap[y].push({ str: item.str, x });
+      }
+      
+      // Sort Y descending (top to bottom), X ascending within each line
+      const sortedYs = Object.keys(lineMap).map(Number).sort((a, b) => b - a);
+      for (const y of sortedYs) {
+        const items = lineMap[y].sort((a, b) => a.x - b.x);
+        // Only take items from LEFT half of page (skip right column = page 2 content)
+        // Oblio puts product table in left ~85% of page width
+        const filtered = items.filter(it => it.x < pageWidth * 0.85);
+        const lineStr = filtered.map(i => i.str).join(' ').trim();
+        if (lineStr) allLines.push(lineStr);
       }
     }
 
-    // Group by Y coordinate into lines
-    const lineMap = {};
-    for (const item of allItems) {
-      const key = item.y;
-      if (!lineMap[key]) lineMap[key] = [];
-      lineMap[key].push(item);
-    }
+    const fullText = allLines.join('\n');
     
-    // Sort lines by Y descending (top to bottom), items by X ascending
-    const sortedYs = Object.keys(lineMap).map(Number).sort((a, b) => b - a);
-    const lines = sortedYs.map(y => {
-      const items = lineMap[y].sort((a, b) => a.x - b.x);
-      return items.map(i => i.str).join(' ').trim();
-    }).filter(Boolean);
-
-    const fullText = lines.join('\n');
-    
-    // DEBUG: store for inspection
-    window._pdfDebugLines = lines;
-    console.log('PDF lines extracted:', lines.length);
-    lines.forEach((l, i) => console.log(i, repr(l)));
+    // DEBUG
+    window._pdfDebugLines = allLines;
+    console.log('PDF lines extracted:', allLines.length);
+    allLines.forEach((l, i) => console.log(i, l));
 
     const result = parseOblioText(fullText);
 
@@ -1426,20 +1429,22 @@ function parseOblioText(text) {
 
   let invoiceNo = '';
   for (const line of lines) {
-    const m = line.match(/(?:Factura|Proforma)\s+([A-Z]{1,3}\s*\d+)/i);
+    const m = line.match(/(?:Factura|Proforma)\s+([A-Z]{2,3}\s*\d+)/i);
     if (m) { invoiceNo = m[1].trim(); break; }
   }
 
   let client = '';
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].match(/^Client:?$/i) || lines[i].match(/Furnizor:.*Client:/i)) {
-      for (let j = i + 1; j < Math.min(i + 5, lines.length); j++) {
-        const candidate = lines[j];
-        if (candidate && !candidate.match(/^(Furnizor|Reg\.|CIF:|Adresa:|COMPLEX SERVICE)/i)) {
-          client = candidate;
-          if (j + 1 < lines.length && lines[j+1] && !lines[j+1].match(/^(Reg\.|CIF:|Adresa:|Tel\.|Judet|Tara)/i) && !lines[j+1].match(/^\d/)) {
-            const extra = lines[j+1];
-            if (extra.length < 40 && !extra.match(/:/)) client += ' ' + extra;
+      for (let j = i + 1; j < Math.min(i + 6, lines.length); j++) {
+        const c = lines[j];
+        if (c && !c.match(/^(Furnizor|Reg\.|CIF:|Adresa:|COMPLEX SERVICE|Nr\.|Pret)/i)) {
+          client = c.replace(/\s+COMPLEX SERVICE.*$/i, '').trim();
+          if (j + 1 < lines.length) {
+            const next = lines[j+1];
+            if (next && !next.match(/^(Reg\.|CIF:|Adresa:|Tel\.|Judet|Tara|IBAN)/i) && !next.match(/^\d/) && next.length < 50) {
+              client += ' ' + next;
+            }
           }
           break;
         }
@@ -1458,24 +1463,18 @@ function parseOblioText(text) {
     "CE525":{"name":"Cablu electric Cupru MYYM 5x2.5mm - 100m","unit":"colac"},
     "CRM50X55":{"name":"Console Rabatabile Mari 500x550","unit":"buc"},
     "D01":{"name":"Deflector AC","unit":"buc"},
-    "D100":{"name":"Diblu 12 x 100","unit":"buc"},
     "DH100":{"name":"Diblu 12 x 100 + Holsurub 8 x 100","unit":"set"},
-    "D160":{"name":"Diblu 12 x 160","unit":"buc"},
     "DH160":{"name":"Diblu 12 x 160 + Holsurub 8 x 160","unit":"set"},
-    "D180":{"name":"Diblu 12 x 180","unit":"buc"},
     "DH180":{"name":"Diblu 12 x 180 + Holsurub 8 x 180","unit":"set"},
-    "D200":{"name":"Diblu 12 x 200","unit":"buc"},
     "DH200":{"name":"Diblu 12 x 200 + Holsurub 8 x 200","unit":"set"},
-    "D260":{"name":"Diblu 12 x 260","unit":"buc"},
     "3DH260":{"name":"Diblu 12 x 260 + Holsurub 8 x 260","unit":"set"},
     "DAM1332":{"name":"Diblu Autoforant Metalic tip melc 13x32","unit":"buc"},
-    "DAM14-40":{"name":"Diblu Autoforant Metalic 14x40 - Cutie 100 buc","unit":"buc"},
+    "DAM14-40":{"name":"Diblu Autoforant Metalic 14x40 - Cutie 100 buc","unit":"cutie"},
     "DSP640":{"name":"Diblu cu surub cui percutie 6x40mm Klimas - Cutie 200 buc","unit":"cutie"},
     "DSP660":{"name":"Diblu cu surub cui percutie 6x60mm Klimas - Cutie 200 buc","unit":"cutie"},
     "DSP680":{"name":"Diblu cu surub cui percutie 6x80mm Klimas - Cutie 100 buc","unit":"cutie"},
     "DSP860":{"name":"Diblu cu surub cui percutie 8x60mm Klimas - Cutie 100 buc","unit":"cutie"},
-    "FD50":{"name":"Furtun Drenaj 5/8' - 50m","unit":"colac"},
-    "FAW":{"name":"Filtru Apa USC009/1","unit":"buc"},
+    "FD50":{"name":"Furtun Drenaj 5/8 - 50m","unit":"colac"},
     "FG912":{"name":"Suport Fix Galvanizat 9000-12000 BTU","unit":"buc"},
     "HL12":{"name":"Holender 1/2","unit":"buc"},
     "HL14":{"name":"Holender 1/4","unit":"buc"},
@@ -1485,120 +1484,75 @@ function parseOblioText(text) {
     "NI12":{"name":"Niplu 1/2","unit":"buc"},
     "NI-14":{"name":"Niplu 1/4","unit":"buc"},
     "NI-38":{"name":"Niplu 3/8","unit":"buc"},
-    "NI-1/2-3/8":{"name":"Niplu 1/2-3/8","unit":"buc"},
     "AG35":{"name":"Pachet Amortizoare AC AG35 - 4 buc","unit":"buc"},
-    "P934":{"name":"Piulita DIN 934 metric M8","unit":"buc"},
     "R39X45":{"name":"Set Console Rabatabile Mici 390x450A","unit":"set"},
     "S8X24X1.5":{"name":"Saiba DIN440 M8 24x1.5","unit":"buc"},
     "S8X24X2":{"name":"Saiba DIN 9021 M8x24x2","unit":"buc"},
     "SCI":{"name":"Stecher Ceramica cu Inel","unit":"buc"},
     "SAA912L":{"name":"Suporti Albi Ambutisati 9000-12000 BTU L470","unit":"buc"},
     "SAA1824":{"name":"Suporti Albi Ambutisati 18000-24000 BTU L530","unit":"buc"},
+    "SRA912":{"name":"Suporti Albi Rabatabili 9000-12000 BTU L450","unit":"buc"},
+    "SRA1824":{"name":"Suporti Albi Rabatabili 18000-24000 BTU L550","unit":"buc"},
     "SP45":{"name":"Suporti Pardoseala 450x150 mm","unit":"buc"},
-    "SP50":{"name":"Suporti Pardoseala 500x200 mm","unit":"buc"},
     "SPS830":{"name":"Surub metric 8x30 + Piulita M8 + Saiba M8 24x1.5","unit":"set"},
     "SPS840":{"name":"Surub metric 8x40 + Piulita M8 + Saiba M8 24x1.5","unit":"set"},
-    "S830":{"name":"Surub DIN 933 metric 8x30mm","unit":"buc"},
-    "S840":{"name":"Surub DIN 933 metric 8x40mm","unit":"buc"},
     "AVB450":{"name":"Tampon amortizor anti-vibratii AVB-450","unit":"buc"},
-    "TI14":{"name":"Teava Halcor Cu PEX ACR 1/4' - colac 50m","unit":"colac"},
-    "TI38":{"name":"Teava Halcor Cu PEX ACR 3/8' - colac 50m","unit":"colac"},
-    "TI12":{"name":"Teava Halcor Cu PEX ACR 1/2' - colac 50m","unit":"colac"},
-    "TI58":{"name":"Teava Halcor Cu PEX ACR 5/8' - colac 25m","unit":"colac"},
-    "TN14":{"name":"Teava Cu ACR 1/4' Neizolata - colac 50m","unit":"colac"},
-    "TN38":{"name":"Teava Cu ACR 3/8' Neizolata - colac 50m","unit":"colac"},
+    "TI14":{"name":"Teava Halcor Cu PEX ACR 1/4 - colac 50m","unit":"colac"},
+    "TI38":{"name":"Teava Halcor Cu PEX ACR 3/8 - colac 50m","unit":"colac"},
+    "TI12":{"name":"Teava Halcor Cu PEX ACR 1/2 - colac 50m","unit":"colac"},
+    "TI58":{"name":"Teava Halcor Cu PEX ACR 5/8 - colac 25m","unit":"colac"},
+    "TI34":{"name":"Teava Halcor Cu PEX ACR 3/4 - colac 25m","unit":"colac"},
+    "TI78":{"name":"Teava Halcor Cu PEX ACR 7/8 - colac 15m","unit":"colac"},
     "OTT1/4":{"name":"Teava Cupru Izolata 1/4 Ottocool - 50m","unit":"colac"},
     "OTT3/8":{"name":"Teava Cupru Izolata 3/8 Ottocool - 50m","unit":"colac"},
-    "1/4-3/8-20M":{"name":"Teava Halcor Twin 1/4+3/8 - 20m","unit":"colac"},
+    "TWIN1438":{"name":"Teava Halcor Twin 1/4+3/8 - 20m","unit":"colac"},
+    "TWIN1412":{"name":"Teava Halcor Twin 1/4+1/2 - 20m","unit":"colac"},
     "U1NANO":{"name":"Solutie Universal NANO 1L","unit":"buc"},
     "U5NANO":{"name":"Solutie Universal NANO 5L","unit":"buc"},
-    "PLAT12R32":{"name":"Aparat Aer Conditionat Platinium 12000 BTU R32","unit":"buc"},
-    "H80":{"name":"Holsurub 8 x 80","unit":"buc"},
-    "H100":{"name":"Holsurub 8 x 100","unit":"buc"},
-    "H160":{"name":"Holsurub 8 x 160","unit":"buc"},
-    "H180":{"name":"Holsurub 8 x 180","unit":"buc"},
-    "H200":{"name":"Holsurub 8 x 200","unit":"buc"},
-    "H260":{"name":"Holsurub 8 x 260","unit":"buc"}
+    "HUSA":{"name":"Husa curatare AC","unit":"buc"}
   };
 
-  const SKIP = ['discount', 'transport', 'subtotal', 'total', 'pagina', 'index', 'aceasta'];
-  // Unit must be followed by a space and a number (the quantity)
-  const unitRx = /\b(set|buc|colac|rola|cutie|BUC|SET)\s+(\d+)/i;
+  const SKIP = ['discount', 'transport', 'subtotal', 'total', 'pagina', 'index', 'aceasta', 'intocmit'];
+  const endRx = /\b(set|buc|colac|cutie|rola|BUC|SET|COLAC)\s+(\d+)\s+[\d.,]+\s+[\d.,]+\s+[\d.,]+\s*$/i;
   const products = [];
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    const numMatch = line.match(/^(\d{1,2})\s+(.+)/);
+    const numMatch = line.match(/^(\d{1,2})\s+\(([^)]+)\)\s*(.+)/);
     if (!numMatch) continue;
 
-    let content = numMatch[2];
-    const lower = content.toLowerCase();
+    const skuRaw = numMatch[2].trim();
+    const sku = skuRaw.toUpperCase();
+    const restOfLine = numMatch[3];
+    const lower = restOfLine.toLowerCase();
     if (SKIP.some(s => lower.startsWith(s))) continue;
 
-    const skuMatch = content.match(/^\(([^)]+)\)/);
-    if (skuMatch) {
-      const skuRaw = skuMatch[1].trim();
-      const sku = skuRaw.toUpperCase();
-      const catalogItem = SKU_MAP[sku] || SKU_MAP[skuRaw];
-
-      let fullContent = content;
-      for (let k = 1; k <= 3; k++) {
-        if (i + k >= lines.length || lines[i+k].match(/^\d{1,2}\s+/)) break;
-        fullContent += ' ' + lines[i+k];
-      }
-
-      const unitMatch2 = unitRx.exec(fullContent);
-      let qty = 0;
-      let unitStr = '';
-      if (unitMatch2) {
-        unitStr = unitMatch2[1].toLowerCase();
-        qty = parseInt(unitMatch2[2]);
-      }
-
-      if (qty > 0) {
-        if (catalogItem) {
-          products.push({ name: catalogItem.name, qty, unit: catalogItem.unit });
-        } else {
-          let name = content.replace(/^\([^)]+\)\s*/, '').trim();
-          const unitIdx2 = name.search(unitRx);
-          if (unitIdx2 > 0) name = name.substring(0, unitIdx2).trim();
-          products.push({ name: name || sku, qty, unit: unitStr || 'buc' });
-        }
-        // Skip only pure continuation lines (no leading product number)
-        for (let k = 1; k <= 3; k++) {
-          if (i + k >= lines.length) break;
-          if (lines[i+k].match(/^\d{1,2}\s+/)) break; // next product — stop
-          if (lines[i+k].match(/^\([A-Z]/i)) break; // starts with SKU — stop
-          i++;
-        }
-        continue;
-      }
+    let endMatch = endRx.exec(line);
+    if (!endMatch && i + 1 < lines.length && !lines[i+1].match(/^\d{1,2}\s+/)) {
+      const combined = line + ' ' + lines[i+1];
+      endMatch = endRx.exec(combined);
+      if (endMatch) i++;
     }
 
-    let fullContent = content;
-    let unitMatch3 = unitRx.exec(fullContent);
-    if (!unitMatch3) {
-      for (let k = 1; k <= 3; k++) {
-        if (i + k >= lines.length || lines[i+k].match(/^\d{1,2}\s+/)) break;
-        fullContent += ' ' + lines[i+k];
-        unitMatch3 = unitRx.exec(fullContent);
-        if (unitMatch3) { i += k; break; }
-      }
-    }
-    if (!unitMatch3) continue;
+    if (!endMatch) continue;
 
-    const unitIdx = fullContent.indexOf(unitMatch3[0]);
-    let name = fullContent.substring(0, unitIdx).trim();
-    const unit = unitMatch3[1].toLowerCase();
-    const qty = parseInt(unitMatch3[2]);
-    if (qty > 0 && name) {
-      name = name.replace(/^\([^)]+\)\s*/, '').trim();
-      products.push({ name, qty, unit });
+    const qty = parseInt(endMatch[2]);
+    if (qty <= 0) continue;
+
+    const catalogItem = SKU_MAP[sku] || SKU_MAP[skuRaw];
+    if (catalogItem) {
+      products.push({ name: catalogItem.name, qty, unit: catalogItem.unit });
+    } else {
+      let name = restOfLine.replace(/\|.*$/, '').trim();
+      const ei = name.search(/\b(set|buc|colac|cutie)\s+\d+/i);
+      if (ei > 0) name = name.substring(0, ei).trim();
+      products.push({ name: name || sku, qty, unit: endMatch[1].toLowerCase() });
     }
   }
 
   return { client: client.trim(), invoiceNo, products };
 }
+
 
 function renderExtractedProducts(products) {
   const container = document.getElementById('productsList');
