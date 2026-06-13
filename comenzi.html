@@ -1455,13 +1455,15 @@ function parseOblioText(text) {
     // Try to find unit in this line
     let unitMatch = unitRx.exec(content);
     
-    // If not found, check if next line is a continuation (no leading number)
-    if (!unitMatch && i + 1 < lines.length) {
-      const next = lines[i + 1];
-      if (!next.match(/^\d{1,2}\s+/)) {
+    // If not found, check next lines for continuation (up to 3 lines)
+    if (!unitMatch) {
+      for (let k = 1; k <= 3; k++) {
+        if (i + k >= lines.length) break;
+        const next = lines[i + k];
+        if (next.match(/^\d{1,2}\s+/)) break; // next product started
         content = content + ' ' + next;
         unitMatch = unitRx.exec(content);
-        if (unitMatch) i++;
+        if (unitMatch) { i += k; break; }
       }
     }
 
