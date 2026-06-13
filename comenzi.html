@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>WPRO — Comenzi</title>
+<style>
+:root {
+  --blue: #0088CC;
+  --blue-dark: #004566;
+  --blue-light: #E6F4FB;
+  --green: #2E7D32;
+  --green-light: #E8F5E9;
+  --orange: #E65100;
+  --orange-light: #FFF3E0;
+  --red: #C62828;
+  --red-light: #FFEBEE;
+  --gray: #5F6368;
+  --gray-light: #F8F9FA;
+  --border: #E0E0E0;
+  --text: #1A1A1A;
+  --text-muted: #666;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #F0F4F8;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ===== LAYOUT ===== */
+.header {
+  background: var(--blue-dark);
+  color: white;
+  padding: 0 16px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.header-logo {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: white;
+}
+
+.header-logo span { color: var(--blue); }
+
+.header-right { display: flex; gap: 8px; align-items: center; }
+
+.nav-tabs {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+
+.nav-tab {
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.nav-tab.active {
+  color: var(--blue);
+  border-bottom-color: var(--blue);
+}
+
+.page { display: none; padding: 16px; max-width: 700px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* ===== CARDS ===== */
+.card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { background: var(--blue-dark); }
+
+.btn-success { background: var(--green); color: white; }
+.btn-danger { background: var(--red); color: white; }
+
+.btn-outline {
+  background: white;
+  color: var(--blue);
+  border: 1.5px solid var(--blue);
+}
+
+.btn-ghost {
+  background: var(--gray-light);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-full { width: 100%; }
+.btn-lg { padding: 14px 20px; font-size: 16px; }
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+/* ===== STATUS BADGES ===== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-pending { background: var(--orange-light); color: var(--orange); }
+.badge-packing { background: #E3F2FD; color: #1565C0; }
+.badge-ready { background: var(--green-light); color: var(--green); }
+.badge-shipped { background: #F3E5F5; color: #6A1B9A; }
+
+/* ===== ORDER LIST ===== */
+.order-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.order-card:active { transform: scale(0.99); }
+.order-card.urgent { border-left: 4px solid var(--orange); }
+.order-card.done { border-left: 4px solid var(--green); opacity: 0.8; }
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.order-client {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.order-meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.order-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--gray-light);
+}
+
+.order-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.progress-bar {
+  width: 80px;
+  height: 6px;
+  background: var(--gray-light);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+.progress-fill.complete { background: var(--green); }
+
+.photo-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ===== CHECKLIST ===== */
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--gray-light);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.checklist-item:last-child { border-bottom: none; }
+.checklist-item.checked { opacity: 0.6; }
+
+.checkbox {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.checkbox.checked {
+  background: var(--green);
+  border-color: var(--green);
+}
+.checkbox svg { display: none; }
+.checkbox.checked svg { display: block; }
+
+.item-info { flex: 1; min-width: 0; }
+
+.item-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+.checklist-item.checked .item-name {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.item-qty {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.qty-badge {
+  min-width: 36px;
+  height: 36px;
+  background: var(--blue-light);
+  color: var(--blue);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+  padding: 0 8px;
+}
+
+/* ===== UPLOAD ZONE ===== */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 32px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--gray-light);
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--blue);
+  background: var(--blue-light);
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.upload-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.upload-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ===== PHOTO GRID ===== */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.photo-thumb {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  width: 100%;
+  background: var(--gray-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-delete {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  background: rgba(198,40,40,0.85);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.add-photo-btn {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  border: 2px dashed var(--border);
+  background: var(--gray-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  gap: 4px;
+  transition: all 0.15s;
+}
+.add-photo-btn:active { background: var(--blue-light); border-color: var(--blue); }
+
+/* ===== STATS ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 14px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--blue);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ===== DETAIL VIEW ===== */
+.detail-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #F0F4F8;
+  z-index: 200;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.detail-overlay.active { display: block; }
+
+.detail-header {
+  background: var(--blue-dark);
+  color: white;
+  padding: 0 16px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+
+.detail-title {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detail-content { padding: 16px; max-width: 700px; margin: 0 auto; }
+
+/* ===== ALERTS ===== */
+.alert {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.alert-warning { background: var(--orange-light); color: var(--orange); border: 1px solid #FFCC80; }
+.alert-success { background: var(--green-light); color: var(--green); border: 1px solid #A5D6A7; }
+.alert-info { background: var(--blue-light); color: var(--blue-dark); border: 1px solid #90CAF9; }
+
+/* ===== FORMS ===== */
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
+.form-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  color: var(--text);
+  background: white;
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
+}
+.form-input:focus { outline: none; border-color: var(--blue); }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 300;
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: 20px 20px 0 0;
+  padding: 20px 16px 32px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* ===== LOADING ===== */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+}
+.loading-overlay.active { display: flex; }
+
+.loading-spinner-big {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ===== MISC ===== */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-muted);
+}
+.empty-icon { font-size: 56px; margin-bottom: 12px; }
+.empty-text { font-size: 16px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+.empty-sub { font-size: 14px; }
+
+.tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--gray-light);
+  color: var(--gray);
+  margin-right: 4px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.flex-1 { flex: 1; }
+
+/* ===== PC specific ===== */
+@media (min-width: 600px) {
+  .photo-grid { grid-template-columns: repeat(4, 1fr); }
+  .stats-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ===== SETUP PAGE ===== */
+.setup-section {
+  background: white;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.setup-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.setup-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.step-list { counter-reset: steps; }
+.step-item {
+  counter-increment: steps;
+  padding: 10px 0 10px 36px;
+  position: relative;
+  font-size: 14px;
+  border-bottom: 1px solid var(--gray-light);
+}
+.step-item:last-child { border-bottom: none; }
+.step-item::before {
+  content: counter(steps);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: var(--blue);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.connected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--green-light);
+  color: var(--green);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.disconnected-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--orange-light);
+  color: var(--orange);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+</style>
+
+<!-- Google API -->
+<script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+
+<!-- ===== LOADING OVERLAY ===== -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner-big"></div>
+  <div id="loadingText">Se procesează...</div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div class="header-logo">WP<span>RO</span></div>
+  <div class="header-right">
+    <button class="btn btn-ghost btn-sm" onclick="syncAll()" title="Sincronizează">↻ Sync</button>
+  </div>
+</div>
+
+<!-- ===== NAV TABS ===== -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showPage('orders')">📦 Comenzi</button>
+  <button class="nav-tab" onclick="showPage('upload')">⬆️ Upload PDF</button>
+  <button class="nav-tab" onclick="showPage('setup')">⚙️ Configurare</button>
+</div>
+
+<!-- ===== PAGE: ORDERS ===== -->
+<div class="page active" id="page-orders">
+  
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-total">0</div>
+      <div class="stat-label">Total azi</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-done" style="color:var(--green)">0</div>
+      <div class="stat-label">Gata</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-packing" style="color:#1565C0">0</div>
+      <div class="stat-label">În pregătire</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-pending" style="color:var(--orange)">0</div>
+      <div class="stat-label">În așteptare</div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-bottom:12px; gap:8px; flex-wrap:wrap;">
+    <select class="form-input" style="flex:1; min-width:120px; padding:8px 12px; font-size:14px;" id="filterStatus" onchange="renderOrders()">
+      <option value="all">Toate statusurile</option>
+      <option value="pending">În așteptare</option>
+      <option value="packing">În pregătire</option>
+      <option value="ready">Gata</option>
+      <option value="shipped">Expediat</option>
+    </select>
+    <input type="date" class="form-input" style="flex:1; min-width:130px; padding:8px 12px; font-size:14px;" id="filterDate" onchange="renderOrders()">
+  </div>
+
+  <div id="ordersList"></div>
+</div>
+
+<!-- ===== PAGE: UPLOAD PDF ===== -->
+<div class="page" id="page-upload">
+  
+  <div class="alert alert-info">
+    <span>ℹ️</span>
+    <span>Upload proforma PDF din Oblio. Produsele se extrag automat și se creează comanda.</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Proformă nouă</div>
+    
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('pdfInput').click()">
+      <div class="upload-icon">📄</div>
+      <div class="upload-text">Apasă pentru a selecta PDF</div>
+      <div class="upload-sub">sau trage fișierul aici</div>
+    </div>
+    <input type="file" id="pdfInput" accept=".pdf" style="display:none" onchange="handlePDFUpload(this)">
+
+    <div id="pdfPreview" style="display:none; margin-top:16px;">
+      <div class="alert alert-success">
+        <span>✅</span>
+        <div>
+          <div style="font-weight:600" id="pdfFileName">document.pdf</div>
+          <div style="font-size:12px; margin-top:2px" id="pdfStatus">Fișier selectat</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="extractedData" style="display:none; margin-top:16px;">
+      <div class="divider"></div>
+      <div class="card-title">Date extrase din PDF</div>
+      
+      <div class="form-group">
+        <label class="form-label">Client</label>
+        <input type="text" class="form-input" id="clientName" placeholder="Nume client">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Nr. proformă</label>
+        <input type="text" class="form-input" id="invoiceNo" placeholder="ex: PF-2026-001">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Data livrare (opțional)</label>
+        <input type="date" class="form-input" id="deliveryDate">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Observații</label>
+        <input type="text" class="form-input" id="orderNotes" placeholder="ex: Ridicare personală, urgent, etc.">
+      </div>
+
+      <div style="margin-bottom:8px; font-size:13px; font-weight:600; color:var(--text-muted);">PRODUSE EXTRASE</div>
+      <div id="productsList"></div>
+      
+      <button class="btn btn-ghost btn-sm" onclick="addManualProduct()" style="margin-bottom:16px; width:100%;">
+        ➕ Adaugă produs manual
+      </button>
+
+      <button class="btn btn-primary btn-full btn-lg" onclick="createOrder()">
+        ✅ Creează comanda
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: SETUP ===== -->
+<div class="page" id="page-setup">
+  
+  <div class="setup-section">
+    <div class="setup-title">Conectare Google</div>
+    <div class="setup-sub">Necesară pentru a salva date și poze în Google Drive/Sheets</div>
+    
+    <div id="googleStatus">
+      <span class="disconnected-badge">● Neconectat</span>
+    </div>
+    
+    <div style="margin-top:12px;">
+      <button class="btn btn-primary" onclick="authGoogle()" id="btnAuthGoogle">
+        🔑 Conectează Google Account
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="form-group">
+      <label class="form-label">Google Sheet ID</label>
+      <input type="text" class="form-input" id="sheetId" placeholder="ID din URL-ul sheet-ului" 
+             onchange="saveConfig()" value="">
+      <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">
+        Din URL: docs.google.com/spreadsheets/d/<strong>ACESTA_E_ID</strong>/edit
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Google Drive Folder ID (pentru poze)</label>
+      <input type="text" class="form-input" id="driveFolderId" placeholder="ID folder din Drive"
+             onchange="saveConfig()" value="">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">API Key (Google Cloud Console)</label>
+      <input type="text" class="form-input" id="apiKey" placeholder="AIza..."
+             onchange="saveConfig()" value="">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Client ID (OAuth 2.0)</label>
+      <input type="text" class="form-input" id="clientId" placeholder="xxxx.apps.googleusercontent.com"
+             onchange="saveConfig()" value="">
+    </div>
+  </div>
+
+  <div class="setup-section">
+    <div class="setup-title">Ghid de configurare</div>
+    <div class="step-list">
+      <div class="step-item">
+        Creează un proiect nou în <strong>Google Cloud Console</strong> (console.cloud.google.com)
+      </div>
+      <div class="step-item">
+        Activează <strong>Google Sheets API</strong> și <strong>Google Drive API</strong>
+      </div>
+      <div class="step-item">
+        Creează credențiale: <strong>API Key</strong> + <strong>OAuth 2.0 Client ID</strong> (tip: Web application). Adaugă URL-ul acestui fișier la "Authorized JavaScript origins"
+      </div>
+      <div class="step-item">
+        Creează un <strong>Google Sheet</strong> gol și copiază ID-ul din URL
+      </div>
+      <div class="step-item">
+        Creează un <strong>folder în Drive</strong> pentru poze și copiază ID-ul folderului
+      </div>
+      <div class="step-item">
+        Introdu toate datele de mai sus și apasă <strong>Conectează Google Account</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup-section">
+    <div class="setup-title">Date locale</div>
+    <div class="setup-sub">Comenzile și configurarea se salvează și în browser (localStorage) ca backup</div>
+    <div class="row" style="gap:10px; flex-wrap:wrap;">
+      <button class="btn btn-ghost btn-sm" onclick="exportLocalData()">📥 Export date locale JSON</button>
+      <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Șterge tot</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DETAIL OVERLAY ===== -->
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-header">
+    <button class="back-btn" onclick="closeDetail()">←</button>
+    <div class="detail-title" id="detailTitle">Comanda</div>
+    <div id="detailBadge"></div>
+  </div>
+  <div class="detail-content" id="detailContent"></div>
+</div>
+
+<!-- ===== ADD PRODUCT MODAL ===== -->
+<div class="modal-overlay" id="addProductModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Adaugă produs</div>
+    <div class="form-group">
+      <label class="form-label">Denumire produs</label>
+      <input type="text" class="form-input" id="newProductName" placeholder="ex: Țeavă Cu PEX 1/4 50m">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Cantitate</label>
+      <input type="number" class="form-input" id="newProductQty" placeholder="1" min="1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Unitate</label>
+      <select class="form-input" id="newProductUnit">
+        <option>buc</option>
+        <option>colac</option>
+        <option>set</option>
+        <option>cutie</option>
+        <option>rolă</option>
+        <option>m</option>
+        <option>kg</option>
+      </select>
+    </div>
+    <div class="row" style="gap:10px; margin-top:8px;">
+      <button class="btn btn-ghost flex-1" onclick="closeAddProductModal()">Anulează</button>
+      <button class="btn btn-primary flex-1" onclick="confirmAddProduct()">Adaugă</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== CONFIG & STATE =====
+let config = {
+  sheetId: '',
+  driveFolderId: '',
+  apiKey: '',
+  clientId: '',
+  isConnected: false
+};
+
+let orders = [];
+let currentOrderId = null;
+let gapiReady = false;
+let isSignedIn = false;
+
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
+
+// ===== INIT =====
+window.addEventListener('DOMContentLoaded', () => {
+  loadConfig();
+  loadLocalOrders();
+  renderOrders();
+  updateStats();
+  
+  // Set today as default filter date
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('filterDate').value = today;
+  
+  // Init GAPI
+  gapi.load('client:auth2', initGapi);
+  
+  // Drag & drop for PDF
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type === 'application/pdf') processPDF(file);
+  });
+});
+
+// ===== CONFIG =====
+function loadConfig() {
+  try {
+    const saved = localStorage.getItem('wpro_config');
+    if (saved) {
+      config = { ...config, ...JSON.parse(saved) };
+      document.getElementById('sheetId').value = config.sheetId || '';
+      document.getElementById('driveFolderId').value = config.driveFolderId || '';
+      document.getElementById('apiKey').value = config.apiKey || '';
+      document.getElementById('clientId').value = config.clientId || '';
+    }
+  } catch(e) {}
+}
+
+function saveConfig() {
+  config.sheetId = document.getElementById('sheetId').value.trim();
+  config.driveFolderId = document.getElementById('driveFolderId').value.trim();
+  config.apiKey = document.getElementById('apiKey').value.trim();
+  config.clientId = document.getElementById('clientId').value.trim();
+  localStorage.setItem('wpro_config', JSON.stringify(config));
+}
+
+// ===== GOOGLE API =====
+function initGapi() {
+  if (!config.apiKey || !config.clientId) {
+    gapiReady = false;
+    return;
+  }
+  gapi.client.init({
+    apiKey: config.apiKey,
+    clientId: config.clientId,
+    scope: SCOPES,
+    discoveryDocs: [
+      'https://sheets.googleapis.com/$discovery/rest?version=v4',
+      'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
+    ]
+  }).then(() => {
+    gapiReady = true;
+    const auth = gapi.auth2.getAuthInstance();
+    isSignedIn = auth.isSignedIn.get();
+    updateGoogleStatus();
+    auth.isSignedIn.listen(signed => {
+      isSignedIn = signed;
+      updateGoogleStatus();
+      if (signed) syncAll();
+    });
+    if (isSignedIn) syncAll();
+  }).catch(e => {
+    console.warn('GAPI init failed:', e);
+    gapiReady = false;
+  });
+}
+
+function updateGoogleStatus() {
+  const el = document.getElementById('googleStatus');
+  const btn = document.getElementById('btnAuthGoogle');
+  if (isSignedIn) {
+    el.innerHTML = '<span class="connected-badge">● Conectat</span>';
+    btn.textContent = '🔓 Deconectează';
+    btn.onclick = () => gapi.auth2.getAuthInstance().signOut();
+  } else {
+    el.innerHTML = '<span class="disconnected-badge">● Neconectat</span>';
+    btn.textContent = '🔑 Conectează Google Account';
+    btn.onclick = authGoogle;
+  }
+}
+
+function authGoogle() {
+  saveConfig();
+  if (!gapiReady) {
+    gapi.load('client:auth2', () => {
+      initGapi();
+      setTimeout(() => {
+        if (gapiReady) gapi.auth2.getAuthInstance().signIn();
+        else alert('Completează mai întâi API Key și Client ID în setări!');
+      }, 2000);
+    });
+    return;
+  }
+  gapi.auth2.getAuthInstance().signIn();
+}
+
+// ===== LOCAL ORDERS =====
+function loadLocalOrders() {
+  try {
+    const saved = localStorage.getItem('wpro_orders');
+    if (saved) orders = JSON.parse(saved);
+  } catch(e) { orders = []; }
+}
+
+function saveLocalOrders() {
+  localStorage.setItem('wpro_orders', JSON.stringify(orders));
+}
+
+function generateId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+}
+
+// ===== SYNC WITH SHEETS =====
+async function syncAll() {
+  if (!isSignedIn || !config.sheetId) return;
+  
+  try {
+    showLoading('Se sincronizează cu Google...');
+    
+    // Read from sheet
+    const resp = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: config.sheetId,
+      range: 'Comenzi!A2:Z'
+    });
+    
+    const rows = resp.result.values || [];
+    const sheetOrders = rows.map(r => ({
+      id: r[0], date: r[1], client: r[2], invoiceNo: r[3],
+      status: r[4], notes: r[5] || '',
+      products: JSON.parse(r[6] || '[]'),
+      photos: JSON.parse(r[7] || '[]'),
+      deliveryDate: r[8] || ''
+    })).filter(o => o.id);
+    
+    // Merge: sheet is source of truth, add local-only orders
+    const sheetIds = new Set(sheetOrders.map(o => o.id));
+    const localOnly = orders.filter(o => !sheetIds.has(o.id));
+    orders = [...sheetOrders, ...localOnly];
+    
+    // Push local-only to sheet
+    for (const o of localOnly) {
+      await appendOrderToSheet(o);
+    }
+    
+    saveLocalOrders();
+    renderOrders();
+    updateStats();
+    hideLoading();
+  } catch(e) {
+    hideLoading();
+    console.warn('Sync error:', e);
+    // Sheet might need header row
+    if (e.result && e.result.error && e.result.error.code === 400) {
+      await initSheet();
+      syncAll();
+    }
+  }
+}
+
+async function initSheet() {
+  if (!isSignedIn || !config.sheetId) return;
+  const headers = [['ID', 'Data', 'Client', 'Nr. Proformă', 'Status', 'Observații', 'Produse (JSON)', 'Poze (JSON)', 'Data livrare']];
+  await gapi.client.sheets.spreadsheets.values.update({
+    spreadsheetId: config.sheetId,
+    range: 'Comenzi!A1:I1',
+    valueInputOption: 'RAW',
+    resource: { values: headers }
+  });
+}
+
+async function appendOrderToSheet(order) {
+  if (!isSignedIn || !config.sheetId) return;
+  const row = [[
+    order.id, order.date, order.client, order.invoiceNo,
+    order.status, order.notes || '',
+    JSON.stringify(order.products || []),
+    JSON.stringify(order.photos || []),
+    order.deliveryDate || ''
+  ]];
+  await gapi.client.sheets.spreadsheets.values.append({
+    spreadsheetId: config.sheetId,
+    range: 'Comenzi!A:I',
+    valueInputOption: 'RAW',
+    insertDataOption: 'INSERT_ROWS',
+    resource: { values: row }
+  });
+}
+
+async function updateOrderInSheet(order) {
+  if (!isSignedIn || !config.sheetId) return;
+  try {
+    // Find row index
+    const resp = await gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: config.sheetId,
+      range: 'Comenzi!A:A'
+    });
+    const ids = (resp.result.values || []).map(r => r[0]);
+    const rowIdx = ids.indexOf(order.id);
+    if (rowIdx < 1) { await appendOrderToSheet(order); return; }
+    
+    const rowNum = rowIdx + 1;
+    const row = [[
+      order.id, order.date, order.client, order.invoiceNo,
+      order.status, order.notes || '',
+      JSON.stringify(order.products || []),
+      JSON.stringify(order.photos || []),
+      order.deliveryDate || ''
+    ]];
+    await gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: config.sheetId,
+      range: `Comenzi!A${rowNum}:I${rowNum}`,
+      valueInputOption: 'RAW',
+      resource: { values: row }
+    });
+  } catch(e) { console.warn('Update sheet error:', e); }
+}
+
+// ===== PDF PROCESSING =====
+function handlePDFUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  processPDF(file);
+}
+
+async function processPDF(file) {
+  showLoading('Se extrage conținutul PDF...');
+  
+  document.getElementById('pdfPreview').style.display = 'block';
+  document.getElementById('pdfFileName').textContent = file.name;
+  document.getElementById('pdfStatus').textContent = 'Se procesează cu AI...';
+  
+  // Convert to base64
+  const base64 = await fileToBase64(file);
+  
+  try {
+    // Call Claude API with PDF
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'document',
+              source: { type: 'base64', media_type: 'application/pdf', data: base64 }
+            },
+            {
+              type: 'text',
+              text: `Extrage din aceasta proforma/factura urmatoarele informatii si returneaza DOAR un JSON valid, fara text suplimentar:
+{
+  "client": "numele clientului",
+  "invoiceNo": "numarul documentului (proforma/factura)",
+  "products": [
+    {"name": "denumire produs", "qty": numar, "unit": "buc/colac/set/cutie/m/kg"}
+  ]
+}
+Daca nu gasesti un camp, pune string gol sau 0. Produsele trebuie extrase exact asa cum apar pe document.`
+            }
+          ]
+        }]
+      })
+    });
+    
+    const data = await response.json();
+    const text = data.content[0].text.trim();
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    
+    document.getElementById('clientName').value = parsed.client || '';
+    document.getElementById('invoiceNo').value = parsed.invoiceNo || '';
+    
+    renderExtractedProducts(parsed.products || []);
+    
+    document.getElementById('pdfStatus').textContent = '✅ Date extrase cu succes!';
+    document.getElementById('extractedData').style.display = 'block';
+    
+    hideLoading();
+  } catch(e) {
+    hideLoading();
+    document.getElementById('pdfStatus').textContent = '⚠️ Extragere parțială - verifică și completează manual';
+    renderExtractedProducts([]);
+    document.getElementById('extractedData').style.display = 'block';
+    document.getElementById('clientName').value = '';
+    document.getElementById('invoiceNo').value = '';
+    console.warn('PDF extract error:', e);
+  }
+}
+
+function renderExtractedProducts(products) {
+  const container = document.getElementById('productsList');
+  
+  if (!window._extractedProducts) window._extractedProducts = [];
+  window._extractedProducts = products;
+  
+  container.innerHTML = products.map((p, i) => `
+    <div style="background:var(--gray-light); border-radius:var(--radius-sm); padding:12px; margin-bottom:8px; display:flex; align-items:center; gap:10px;" id="ep-${i}">
+      <div style="flex:1;">
+        <div style="font-size:14px; font-weight:600;">${escHtml(p.name)}</div>
+        <div style="font-size:12px; color:var(--text-muted);">${p.qty} ${p.unit}</div>
+      </div>
+      <button onclick="removeExtractedProduct(${i})" style="background:var(--red-light); border:none; color:var(--red); border-radius:6px; padding:4px 8px; cursor:pointer; font-size:16px;">✕</button>
+    </div>
+  `).join('') || '<div style="color:var(--text-muted); font-size:14px; padding:8px 0;">Niciun produs extras. Adaugă manual.</div>';
+}
+
+function removeExtractedProduct(idx) {
+  window._extractedProducts.splice(idx, 1);
+  renderExtractedProducts(window._extractedProducts);
+}
+
+function addManualProduct() {
+  document.getElementById('newProductName').value = '';
+  document.getElementById('newProductQty').value = '';
+  document.getElementById('addProductModal').classList.add('active');
+}
+
+function closeAddProductModal() {
+  document.getElementById('addProductModal').classList.remove('active');
+}
+
+function confirmAddProduct() {
+  const name = document.getElementById('newProductName').value.trim();
+  const qty = parseInt(document.getElementById('newProductQty').value) || 1;
+  const unit = document.getElementById('newProductUnit').value;
+  
+  if (!name) return;
+  
+  if (!window._extractedProducts) window._extractedProducts = [];
+  window._extractedProducts.push({ name, qty, unit });
+  renderExtractedProducts(window._extractedProducts);
+  closeAddProductModal();
+}
+
+async function createOrder() {
+  const client = document.getElementById('clientName').value.trim();
+  const invoiceNo = document.getElementById('invoiceNo').value.trim();
+  const notes = document.getElementById('orderNotes').value.trim();
+  const deliveryDate = document.getElementById('deliveryDate').value;
+  const products = (window._extractedProducts || []).map(p => ({
+    ...p,
+    checked: false,
+    id: generateId()
+  }));
+  
+  if (!client) { alert('Completează numele clientului!'); return; }
+  if (products.length === 0) { alert('Adaugă cel puțin un produs!'); return; }
+  
+  const order = {
+    id: generateId(),
+    date: new Date().toISOString().split('T')[0],
+    client, invoiceNo, notes, deliveryDate,
+    status: 'pending',
+    products,
+    photos: [],
+    createdAt: new Date().toISOString()
+  };
+  
+  orders.unshift(order);
+  saveLocalOrders();
+  
+  // Push to sheet
+  showLoading('Se salvează comanda...');
+  try {
+    if (isSignedIn && config.sheetId) {
+      await appendOrderToSheet(order);
+    }
+  } catch(e) { console.warn('Sheet save error:', e); }
+  hideLoading();
+  
+  // Reset upload form
+  document.getElementById('pdfPreview').style.display = 'none';
+  document.getElementById('extractedData').style.display = 'none';
+  document.getElementById('pdfInput').value = '';
+  window._extractedProducts = [];
+  document.getElementById('clientName').value = '';
+  document.getElementById('invoiceNo').value = '';
+  document.getElementById('orderNotes').value = '';
+  document.getElementById('deliveryDate').value = '';
+  
+  updateStats();
+  renderOrders();
+  showPage('orders');
+  
+  // Open new order
+  setTimeout(() => openOrder(order.id), 300);
+}
+
+// ===== ORDERS RENDER =====
+function renderOrders() {
+  const container = document.getElementById('ordersList');
+  const statusFilter = document.getElementById('filterStatus').value;
+  const dateFilter = document.getElementById('filterDate').value;
+  
+  let filtered = [...orders];
+  if (statusFilter !== 'all') filtered = filtered.filter(o => o.status === statusFilter);
+  if (dateFilter) filtered = filtered.filter(o => o.date === dateFilter);
+  
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <div class="empty-text">Nicio comandă</div>
+        <div class="empty-sub">Adaugă o proformă din tab-ul Upload PDF</div>
+      </div>`;
+    return;
+  }
+  
+  container.innerHTML = filtered.map(order => {
+    const done = order.products.filter(p => p.checked).length;
+    const total = order.products.length;
+    const pct = total > 0 ? Math.round((done/total)*100) : 0;
+    const statusConfig = getStatusConfig(order.status);
+    const isComplete = order.status === 'ready' || order.status === 'shipped';
+    
+    return `
+      <div class="order-card ${isComplete ? 'done' : ''}" onclick="openOrder('${order.id}')">
+        <div class="order-header">
+          <div>
+            <div class="order-client">${escHtml(order.client)}</div>
+            <div class="order-meta">
+              ${order.invoiceNo ? `<span class="tag">${escHtml(order.invoiceNo)}</span>` : ''}
+              ${order.deliveryDate ? `🚚 ${formatDate(order.deliveryDate)}` : ''}
+            </div>
+          </div>
+          <span class="badge badge-${order.status}">${statusConfig.label}</span>
+        </div>
+        
+        <div class="order-footer">
+          <div class="order-progress">
+            <div class="progress-bar">
+              <div class="progress-fill ${pct === 100 ? 'complete' : ''}" style="width:${pct}%"></div>
+            </div>
+            <span>${done}/${total} produse</span>
+          </div>
+          <div class="photo-indicator">
+            📷 ${order.photos.length}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function getStatusConfig(status) {
+  const map = {
+    pending: { label: 'În așteptare', icon: '⏳' },
+    packing: { label: 'În pregătire', icon: '📦' },
+    ready: { label: 'Gata ✓', icon: '✅' },
+    shipped: { label: 'Expediat', icon: '🚚' }
+  };
+  return map[status] || map.pending;
+}
+
+function updateStats() {
+  const today = new Date().toISOString().split('T')[0];
+  const todayOrders = orders.filter(o => o.date === today);
+  
+  document.getElementById('stat-total').textContent = todayOrders.length;
+  document.getElementById('stat-done').textContent = todayOrders.filter(o => o.status === 'ready' || o.status === 'shipped').length;
+  document.getElementById('stat-packing').textContent = todayOrders.filter(o => o.status === 'packing').length;
+  document.getElementById('stat-pending').textContent = todayOrders.filter(o => o.status === 'pending').length;
+}
+
+// ===== ORDER DETAIL =====
+function openOrder(id) {
+  currentOrderId = id;
+  const order = orders.find(o => o.id === id);
+  if (!order) return;
+  
+  document.getElementById('detailTitle').textContent = order.client;
+  const sc = getStatusConfig(order.status);
+  document.getElementById('detailBadge').innerHTML = `<span class="badge badge-${order.status}" style="font-size:11px;">${sc.label}</span>`;
+  
+  renderDetailContent(order);
+  document.getElementById('detailOverlay').classList.add('active');
+}
+
+function renderDetailContent(order) {
+  const done = order.products.filter(p => p.checked).length;
+  const total = order.products.length;
+  const allChecked = done === total && total > 0;
+  
+  const html = `
+    ${order.invoiceNo ? `<div class="alert alert-info" style="margin-bottom:12px;">
+      <span>📄</span>
+      <span><strong>${escHtml(order.invoiceNo)}</strong> · ${formatDate(order.date)}${order.deliveryDate ? ` · Livrare: ${formatDate(order.deliveryDate)}` : ''}</span>
+    </div>` : ''}
+    
+    ${order.notes ? `<div class="alert alert-warning">
+      <span>⚠️</span>
+      <span>${escHtml(order.notes)}</span>
+    </div>` : ''}
+    
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div class="card-title" style="margin:0;">CHECKLIST PRODUSE</div>
+        <span style="font-size:13px; font-weight:700; color:${allChecked ? 'var(--green)' : 'var(--blue)'}">
+          ${done}/${total}
+        </span>
+      </div>
+      
+      <div class="progress-bar" style="width:100%; height:8px; margin-bottom:16px;">
+        <div class="progress-fill ${allChecked ? 'complete' : ''}" style="width:${total > 0 ? Math.round(done/total*100) : 0}%; height:8px;"></div>
+      </div>
+      
+      <div id="checklistItems">
+        ${order.products.map((p, i) => `
+          <div class="checklist-item ${p.checked ? 'checked' : ''}" onclick="toggleItem(${i})">
+            <div class="checkbox ${p.checked ? 'checked' : ''}">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l3.5 3.5L13 4.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="item-info">
+              <div class="item-name">${escHtml(p.name)}</div>
+            </div>
+            <div class="qty-badge">${p.qty}<span style="font-size:11px; font-weight:400;"> ${p.unit}</span></div>
+          </div>
+        `).join('')}
+      </div>
+      
+      ${allChecked ? `<div class="alert alert-success" style="margin-top:12px;">
+        <span>🎉</span>
+        <span><strong>Toate produsele bifate!</strong> Fă pozele cutiei și marchează gata.</span>
+      </div>` : ''}
+    </div>
+    
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div class="card-title" style="margin:0;">POZE COLETE (${order.photos.length})</div>
+      </div>
+      
+      <div class="photo-grid" id="photoGrid">
+        ${order.photos.map((ph, i) => `
+          <div class="photo-thumb">
+            <img src="${ph.url}" alt="Foto ${i+1}" onclick="viewPhoto('${ph.url}')" loading="lazy">
+            <button class="photo-delete" onclick="event.stopPropagation(); deletePhoto(${i})">✕</button>
+          </div>
+        `).join('')}
+        <label class="add-photo-btn" for="photoInput">
+          <span style="font-size:28px;">📷</span>
+          <span>Adaugă poze</span>
+        </label>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" multiple capture="environment" 
+             style="display:none" onchange="handlePhotoUpload(this)">
+    </div>
+    
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">STATUS COMANDĂ</div>
+      <div class="row" style="flex-wrap:wrap; gap:8px;">
+        ${['pending','packing','ready','shipped'].map(s => {
+          const sc = getStatusConfig(s);
+          const isActive = order.status === s;
+          return `<button 
+            onclick="changeStatus('${s}')" 
+            class="btn ${isActive ? 'btn-primary' : 'btn-ghost'}" 
+            style="flex:1; min-width:100px; font-size:13px;">
+            ${sc.icon} ${sc.label}
+          </button>`;
+        }).join('')}
+      </div>
+    </div>
+    
+    <button class="btn btn-danger btn-full" onclick="deleteOrder()">🗑️ Șterge comanda</button>
+    <div style="height:30px;"></div>
+  `;
+  
+  document.getElementById('detailContent').innerHTML = html;
+}
+
+async function toggleItem(idx) {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  
+  order.products[idx].checked = !order.products[idx].checked;
+  
+  // Auto-advance status to packing if first item checked
+  if (order.products[idx].checked && order.status === 'pending') {
+    order.status = 'packing';
+  }
+  
+  const allDone = order.products.every(p => p.checked);
+  if (allDone && order.status === 'packing') {
+    // Don't auto-set ready, let user do it after photos
+  }
+  
+  saveLocalOrders();
+  renderDetailContent(order);
+  updateStats();
+  
+  // Sync
+  if (isSignedIn && config.sheetId) {
+    updateOrderInSheet(order).catch(() => {});
+  }
+}
+
+async function changeStatus(newStatus) {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+
+  if (newStatus === 'ready' || newStatus === 'shipped') {
+    const total = order.products.length;
+    const done = order.products.filter(p => p.checked).length;
+    if (done < total) {
+      const remaining = total - done;
+      const names = order.products.filter(p => !p.checked).map(p => `• ${p.qty} ${p.unit} ${p.name}`).join('\n');
+      alert(`⛔ Nu poți marca "Gata" — mai ai ${remaining} produs${remaining > 1 ? 'e' : ''} nebifat${remaining > 1 ? 'e' : ''}:\n\n${names}`);
+      return;
+    }
+    if (order.photos.length === 0 && newStatus === 'ready') {
+      const ok = confirm('⚠️ Nu ai nicio poză atașată.\nContinui fără poze?');
+      if (!ok) return;
+    }
+  }
+
+  order.status = newStatus;
+  saveLocalOrders();
+  updateStats();
+  renderOrders();
+  renderDetailContent(order);
+  
+  // Update sheet badge
+  document.getElementById('detailBadge').innerHTML = `<span class="badge badge-${order.status}" style="font-size:11px;">${getStatusConfig(order.status).label}</span>`;
+  
+  if (isSignedIn && config.sheetId) {
+    updateOrderInSheet(order).catch(() => {});
+  }
+}
+
+// ===== PHOTOS =====
+async function handlePhotoUpload(input) {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  
+  showLoading(`Se încarcă ${files.length} poze...`);
+  
+  for (const file of files) {
+    try {
+      if (isSignedIn && config.driveFolderId) {
+        // Upload to Drive
+        const url = await uploadToDrive(file, order);
+        order.photos.push({ url, name: file.name, driveId: url });
+      } else {
+        // Fallback: store as base64 locally
+        const base64 = await fileToBase64WithPrefix(file);
+        order.photos.push({ url: base64, name: file.name });
+      }
+    } catch(e) {
+      console.warn('Photo upload error:', e);
+      // Fallback to local
+      const base64 = await fileToBase64WithPrefix(file);
+      order.photos.push({ url: base64, name: file.name });
+    }
+  }
+  
+  saveLocalOrders();
+  renderDetailContent(order);
+  hideLoading();
+  
+  // Update sheet
+  if (isSignedIn && config.sheetId) {
+    updateOrderInSheet(order).catch(() => {});
+  }
+  
+  input.value = '';
+}
+
+async function uploadToDrive(file, order) {
+  const metadata = {
+    name: `${order.id}_${order.client}_${file.name}`,
+    parents: [config.driveFolderId]
+  };
+  
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  form.append('file', file);
+  
+  const resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,webContentLink', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token}` },
+    body: form
+  });
+  
+  const data = await resp.json();
+  
+  // Make file viewable by anyone with link for download
+  await gapi.client.drive.permissions.create({
+    fileId: data.id,
+    resource: { role: 'reader', type: 'anyone' }
+  });
+  
+  return `https://drive.google.com/uc?id=${data.id}&export=download`;
+}
+
+function deletePhoto(idx) {
+  const order = orders.find(o => o.id === currentOrderId);
+  if (!order) return;
+  if (!confirm('Ștergi această poză?')) return;
+  order.photos.splice(idx, 1);
+  saveLocalOrders();
+  renderDetailContent(order);
+  if (isSignedIn && config.sheetId) updateOrderInSheet(order).catch(() => {});
+}
+
+function viewPhoto(url) {
+  window.open(url, '_blank');
+}
+
+function deleteOrder() {
+  if (!confirm('Ștergi această comandă?')) return;
+  orders = orders.filter(o => o.id !== currentOrderId);
+  saveLocalOrders();
+  updateStats();
+  renderOrders();
+  closeDetail();
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('active');
+  currentOrderId = null;
+}
+
+// ===== NAVIGATION =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    if (t.getAttribute('onclick').includes("'" + name + "'")) t.classList.add('active');
+  });
+}
+
+// ===== UTILS =====
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatDate(str) {
+  if (!str) return '';
+  const [y,m,d] = str.split('-');
+  return `${d}.${m}.${y}`;
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+function fileToBase64WithPrefix(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+function showLoading(text) {
+  document.getElementById('loadingText').textContent = text;
+  document.getElementById('loadingOverlay').classList.add('active');
+}
+
+function hideLoading() {
+  document.getElementById('loadingOverlay').classList.remove('active');
+}
+
+function exportLocalData() {
+  const blob = new Blob([JSON.stringify({ orders, config: { ...config, apiKey: '***', clientId: '***' } }, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `wpro_comenzi_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearAllData() {
+  if (!confirm('Ștergi TOATE datele locale? Datele din Google Sheets rămân.')) return;
+  localStorage.removeItem('wpro_orders');
+  orders = [];
+  renderOrders();
+  updateStats();
+}
+</script>
+</body>
+</html>
