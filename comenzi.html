@@ -6,978 +6,315 @@
 <title>WPRO — Comenzi</title>
 <style>
 :root {
-  --blue: #0088CC;
-  --blue-dark: #004566;
-  --blue-light: #E6F4FB;
-  --green: #2E7D32;
-  --green-light: #E8F5E9;
-  --orange: #E65100;
-  --orange-light: #FFF3E0;
-  --red: #C62828;
-  --red-light: #FFEBEE;
-  --gray: #5F6368;
-  --gray-light: #F8F9FA;
-  --border: #E0E0E0;
-  --text: #1A1A1A;
-  --text-muted: #666;
-  --radius: 12px;
-  --radius-sm: 8px;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #F0F4F8;
-  color: var(--text);
-  min-height: 100vh;
-}
-
-/* ===== LAYOUT ===== */
-.header {
-  background: var(--blue-dark);
-  color: white;
-  padding: 0 16px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.header-logo {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  color: white;
-}
-
-.header-logo span { color: var(--blue); }
-
-.header-right { display: flex; gap: 8px; align-items: center; }
-
-.nav-tabs {
-  background: white;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.nav-tabs::-webkit-scrollbar { display: none; }
-
-.nav-tab {
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-muted);
-  border: none;
-  background: none;
-  cursor: pointer;
-  white-space: nowrap;
-  border-bottom: 2px solid transparent;
-  transition: all 0.15s;
-}
-.nav-tab.active {
-  color: var(--blue);
-  border-bottom-color: var(--blue);
-}
-
-.page { display: none; padding: 16px; max-width: 700px; margin: 0 auto; }
-.page.active { display: block; }
-
-/* ===== CARDS ===== */
-.card {
-  background: white;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 16px;
-  margin-bottom: 12px;
-}
-
-.card-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 12px;
-}
-
-/* ===== BUTTONS ===== */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.15s;
-  text-decoration: none;
-  white-space: nowrap;
-}
-.btn:active { transform: scale(0.97); }
-
-.btn-primary { background: var(--blue); color: white; }
-.btn-primary:hover { background: var(--blue-dark); }
-
-.btn-success { background: var(--green); color: white; }
-.btn-danger { background: var(--red); color: white; }
-
-.btn-outline {
-  background: white;
-  color: var(--blue);
-  border: 1.5px solid var(--blue);
-}
-
-.btn-ghost {
-  background: var(--gray-light);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-
-.btn-full { width: 100%; }
-.btn-lg { padding: 14px 20px; font-size: 16px; }
-
-.btn-sm {
-  padding: 6px 12px;
-  font-size: 13px;
-}
-
-/* ===== STATUS BADGES ===== */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.badge-pending { background: var(--orange-light); color: var(--orange); }
-.badge-packing { background: #E3F2FD; color: #1565C0; }
-.badge-ready { background: var(--green-light); color: var(--green); }
-.badge-shipped { background: #F3E5F5; color: #6A1B9A; }
-
-/* ===== ORDER LIST ===== */
-.order-card {
-  background: white;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 16px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all 0.15s;
-  position: relative;
-}
-.order-card:active { transform: scale(0.99); }
-.order-card.urgent { border-left: 4px solid var(--orange); }
-.order-card.done { border-left: 4px solid var(--green); opacity: 0.8; }
-
-.order-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
-
-.order-client {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.order-meta {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.order-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--gray-light);
-}
-
-.order-progress {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-.progress-bar {
-  width: 80px;
-  height: 6px;
-  background: var(--gray-light);
-  border-radius: 3px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: var(--blue);
-  border-radius: 3px;
-  transition: width 0.3s;
-}
-.progress-fill.complete { background: var(--green); }
-
-.photo-indicator {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-/* ===== CHECKLIST ===== */
-.checklist-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--gray-light);
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.checklist-item:last-child { border-bottom: none; }
-.checklist-item.checked { opacity: 0.6; }
-
-.checkbox {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  border: 2px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.15s;
-}
-.checkbox.checked {
-  background: var(--green);
-  border-color: var(--green);
-}
-.checkbox svg { display: none; }
-.checkbox.checked svg { display: block; }
-
-.item-info { flex: 1; min-width: 0; }
-
-.item-name {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text);
-  line-height: 1.3;
-}
-.checklist-item.checked .item-name {
-  text-decoration: line-through;
-  color: var(--text-muted);
-}
-
-.item-qty {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.qty-badge {
-  min-width: 36px;
-  height: 36px;
-  background: var(--blue-light);
-  color: var(--blue);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 15px;
-  flex-shrink: 0;
-  padding: 0 8px;
-}
-
-/* ===== UPLOAD ZONE ===== */
-.upload-zone {
-  border: 2px dashed var(--border);
-  border-radius: var(--radius);
-  padding: 32px 16px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: var(--gray-light);
-}
-.upload-zone:hover, .upload-zone.drag-over {
-  border-color: var(--blue);
-  background: var(--blue-light);
-}
-
-.upload-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.upload-text {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-
-.upload-sub {
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-/* ===== PHOTO GRID ===== */
-.photo-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  margin-top: 12px;
-}
-
-.photo-thumb {
-  aspect-ratio: 1;
-  border-radius: var(--radius-sm);
-  object-fit: cover;
-  width: 100%;
-  background: var(--gray-light);
-  position: relative;
-  overflow: hidden;
-}
-
-.photo-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.photo-delete {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 24px;
-  height: 24px;
-  background: rgba(198,40,40,0.85);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-.add-photo-btn {
-  aspect-ratio: 1;
-  border-radius: var(--radius-sm);
-  border: 2px dashed var(--border);
-  background: var(--gray-light);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 12px;
-  color: var(--text-muted);
-  gap: 4px;
-  transition: all 0.15s;
-}
-.add-photo-btn:active { background: var(--blue-light); border-color: var(--blue); }
-
-/* ===== STATS ===== */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.stat-card {
-  background: white;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 14px;
-  text-align: center;
-}
-
-.stat-value {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--blue);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-/* ===== DETAIL VIEW ===== */
-.detail-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: #F0F4F8;
-  z-index: 200;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.detail-overlay.active { display: block; }
-
-.detail-header {
-  background: var(--blue-dark);
-  color: white;
-  padding: 0 16px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.back-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 22px;
-  cursor: pointer;
-  padding: 4px;
-  line-height: 1;
-}
-
-.detail-title {
-  flex: 1;
-  font-size: 17px;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.detail-content { padding: 16px; max-width: 700px; margin: 0 auto; }
-
-/* ===== ALERTS ===== */
-.alert {
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-.alert-warning { background: var(--orange-light); color: var(--orange); border: 1px solid #FFCC80; }
-.alert-success { background: var(--green-light); color: var(--green); border: 1px solid #A5D6A7; }
-.alert-info { background: var(--blue-light); color: var(--blue-dark); border: 1px solid #90CAF9; }
-
-/* ===== FORMS ===== */
-.form-group { margin-bottom: 14px; }
-.form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text-muted); }
-.form-input {
-  width: 100%;
-  padding: 11px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 15px;
-  color: var(--text);
-  background: white;
-  transition: border-color 0.15s;
-  -webkit-appearance: none;
-}
-.form-input:focus { outline: none; border-color: var(--blue); }
-
-/* ===== MODAL ===== */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 300;
-  align-items: flex-end;
-  justify-content: center;
-}
-.modal-overlay.active { display: flex; }
-
-.modal {
-  background: white;
-  border-radius: 20px 20px 0 0;
-  padding: 20px 16px 32px;
-  width: 100%;
-  max-width: 700px;
-  max-height: 85vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.modal-handle {
-  width: 40px;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  margin: 0 auto 16px;
-}
-
-.modal-title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-
-/* ===== LOADING ===== */
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  display: inline-block;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-8px); }
-  40% { transform: translateX(8px); }
-  60% { transform: translateX(-6px); }
-  80% { transform: translateX(6px); }
-}
-
-.loading-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 500;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 12px;
-  color: white;
-  font-size: 15px;
-  font-weight: 500;
-}
-.loading-overlay.active { display: flex; }
-
-.loading-spinner-big {
-  width: 48px;
-  height: 48px;
-  border: 4px solid rgba(255,255,255,0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-/* ===== MISC ===== */
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 16px 0;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 48px 20px;
-  color: var(--text-muted);
-}
-.empty-icon { font-size: 56px; margin-bottom: 12px; }
-.empty-text { font-size: 16px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
-.empty-sub { font-size: 14px; }
-
-.tag {
-  display: inline-block;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  background: var(--gray-light);
-  color: var(--gray);
-  margin-right: 4px;
-}
-
-.row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.flex-1 { flex: 1; }
-
-/* ===== PC specific ===== */
-@media (min-width: 600px) {
-  .photo-grid { grid-template-columns: repeat(4, 1fr); }
-  .stats-grid { grid-template-columns: repeat(4, 1fr); }
-}
-
-/* ===== SETUP PAGE ===== */
-.setup-section {
-  background: white;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 20px;
-  margin-bottom: 16px;
-}
-
-.setup-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.setup-sub {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-}
-
-.step-list { counter-reset: steps; }
-.step-item {
-  counter-increment: steps;
-  padding: 10px 0 10px 36px;
-  position: relative;
-  font-size: 14px;
-  border-bottom: 1px solid var(--gray-light);
-}
-.step-item:last-child { border-bottom: none; }
-.step-item::before {
-  content: counter(steps);
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 24px;
-  background: var(--blue);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.connected-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  background: var(--green-light);
-  color: var(--green);
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.disconnected-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  background: var(--orange-light);
-  color: var(--orange);
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
+  --blue:#0088CC; --blue-dark:#004566; --blue-light:#E6F4FB;
+  --green:#2E7D32; --green-light:#E8F5E9;
+  --orange:#E65100; --orange-light:#FFF3E0;
+  --red:#C62828; --red-light:#FFEBEE;
+  --gray:#5F6368; --gray-light:#F8F9FA;
+  --border:#E0E0E0; --text:#1A1A1A; --text-muted:#666;
+  --radius:12px; --radius-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F0F4F8;color:var(--text);min-height:100vh}
+
+/* PIN */
+#pinScreen{display:flex;position:fixed;inset:0;background:var(--blue-dark);z-index:1000;flex-direction:column;align-items:center;justify-content:center;gap:24px}
+.pin-logo{color:white;font-size:28px;font-weight:700}.pin-logo span{color:var(--blue)}
+.pin-box{background:rgba(255,255,255,0.08);border-radius:16px;padding:28px 24px;width:90%;max-width:340px;text-align:center}
+.pin-title{color:white;font-size:15px;font-weight:600;margin-bottom:20px}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:16px}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.25);transition:background 0.15s}
+.pin-dot.filled{background:white}
+.pin-error{color:#FF6B6B;font-size:13px;min-height:18px;margin-bottom:12px}
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pin-btn{background:rgba(255,255,255,0.12);border:none;border-radius:12px;color:white;font-size:22px;font-weight:500;height:60px;cursor:pointer;transition:background 0.1s}
+.pin-btn:active{background:rgba(255,255,255,0.3)}
+.pin-hint{color:rgba(255,255,255,0.4);font-size:12px}
+
+/* HEADER */
+.header{background:var(--blue-dark);color:white;padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.header-logo{font-size:20px;font-weight:700;color:white}.header-logo span{color:var(--blue)}
+.nav-tabs{background:white;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:12px 20px;font-size:14px;font-weight:500;color:var(--text-muted);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* PAGES */
+.page{display:none;padding:16px;max-width:700px;margin:0 auto}.page.active{display:block}
+.card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--blue);color:white}.btn-primary:hover{background:var(--blue-dark)}
+.btn-danger{background:var(--red);color:white}
+.btn-ghost{background:var(--gray-light);color:var(--text);border:1px solid var(--border)}
+.btn-full{width:100%}.btn-lg{padding:14px 20px;font-size:16px}.btn-sm{padding:6px 12px;font-size:13px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(min-width:600px){.stats-grid{grid-template-columns:repeat(4,1fr)}.photo-grid{grid-template-columns:repeat(4,1fr)}}
+.stat-card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:14px;text-align:center}
+.stat-value{font-size:32px;font-weight:700;color:var(--blue);line-height:1;margin-bottom:4px}
+.stat-label{font-size:12px;color:var(--text-muted);font-weight:500}
+
+/* ORDERS */
+.order-card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:10px;cursor:pointer;transition:all 0.15s}
+.order-card:active{transform:scale(0.99)}
+.order-card.done{border-left:4px solid var(--green);opacity:0.85}
+.order-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.order-client{font-size:16px;font-weight:600}
+.order-meta{font-size:13px;color:var(--text-muted);margin-top:2px}
+.order-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-light)}
+.progress-bar{width:80px;height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--blue);border-radius:3px;transition:width 0.3s}
+.progress-fill.complete{background:var(--green)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.badge-pending{background:var(--orange-light);color:var(--orange)}
+.badge-packing{background:#E3F2FD;color:#1565C0}
+.badge-ready{background:var(--green-light);color:var(--green)}
+.badge-shipped{background:#F3E5F5;color:#6A1B9A}
+.tag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;background:var(--gray-light);color:var(--gray);margin-right:4px}
+
+/* CHECKLIST */
+.checklist-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--gray-light);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.checklist-item:last-child{border-bottom:none}
+.checklist-item.checked{opacity:0.6}
+.checkbox{width:28px;height:28px;border-radius:8px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s}
+.checkbox.checked{background:var(--green);border-color:var(--green)}
+.checkbox svg{display:none}.checkbox.checked svg{display:block}
+.item-name{font-size:15px;font-weight:500}
+.checklist-item.checked .item-name{text-decoration:line-through;color:var(--text-muted)}
+.qty-badge{min-width:44px;height:36px;background:var(--blue-light);color:var(--blue);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;padding:0 8px;gap:2px}
+
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:32px 16px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--gray-light)}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--blue-light)}
+.upload-icon{font-size:48px;margin-bottom:12px}
+.upload-text{font-size:16px;font-weight:600;margin-bottom:6px}
+.upload-sub{font-size:13px;color:var(--text-muted)}
+
+/* PHOTOS */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.photo-thumb{aspect-ratio:1;border-radius:var(--radius-sm);overflow:hidden;position:relative;background:var(--gray-light)}
+.photo-thumb img{width:100%;height:100%;object-fit:cover}
+.photo-delete{position:absolute;top:4px;right:4px;width:24px;height:24px;background:rgba(198,40,40,0.85);color:white;border:none;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.add-photo-btn{aspect-ratio:1;border-radius:var(--radius-sm);border:2px dashed var(--border);background:var(--gray-light);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:var(--text-muted);gap:4px}
+.add-photo-btn:active{background:var(--blue-light)}
+
+/* DETAIL */
+.detail-overlay{display:none;position:fixed;inset:0;background:#F0F4F8;z-index:200;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.detail-overlay.active{display:block}
+.detail-header{background:var(--blue-dark);color:white;padding:0 16px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+.back-btn{background:none;border:none;color:white;font-size:22px;cursor:pointer;padding:4px;line-height:1}
+.detail-title{flex:1;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.detail-content{padding:16px;max-width:700px;margin:0 auto}
+
+/* ALERTS */
+.alert{padding:12px 14px;border-radius:var(--radius-sm);font-size:14px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px}
+.alert-warning{background:var(--orange-light);color:var(--orange);border:1px solid #FFCC80}
+.alert-success{background:var(--green-light);color:var(--green);border:1px solid #A5D6A7}
+.alert-info{background:var(--blue-light);color:var(--blue-dark);border:1px solid #90CAF9}
+.alert-error{background:var(--red-light);color:var(--red);border:1px solid #EF9A9A}
+
+/* FORMS */
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text-muted)}
+.form-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:15px;color:var(--text);background:white;-webkit-appearance:none}
+.form-input:focus{outline:none;border-color:var(--blue)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:flex-end;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:white;border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-width:700px;max-height:85vh;overflow-y:auto}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px}
+
+/* MISC */
+.divider{height:1px;background:var(--border);margin:16px 0}
+.row{display:flex;gap:10px;align-items:center}.flex-1{flex:1}
+.empty-state{text-align:center;padding:48px 20px;color:var(--text-muted)}
+.empty-icon{font-size:56px;margin-bottom:12px}
+.empty-text{font-size:16px;font-weight:500;margin-bottom:6px;color:var(--text)}
+.empty-sub{font-size:14px}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:white;font-size:15px;font-weight:500}
+.loading-overlay.active{display:flex}
+.spinner-big{width:48px;height:48px;border:4px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.product-row{background:var(--gray-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.connected-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px}
+.disconnected-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block;margin-right:6px}
+.setup-section{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:20px;margin-bottom:16px}
+.setup-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.setup-sub{font-size:13px;color:var(--text-muted);margin-bottom:16px}
 </style>
-
-<!-- Google API -->
 <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
 
-<!-- ===== PIN SCREEN ===== -->
-<div id="pinScreen" style="display:none; position:fixed; inset:0; background:#004566; z-index:1000; flex-direction:column; align-items:center; justify-content:center; gap:24px;">
-  <div style="color:white; font-size:28px; font-weight:700; letter-spacing:-1px;">WP<span style="color:#0088CC;">RO</span></div>
-  <div style="color:rgba(255,255,255,0.7); font-size:14px;">Comenzi & Livrări</div>
-
-  <div style="background:rgba(255,255,255,0.08); border-radius:16px; padding:28px 24px; width:90%; max-width:340px; text-align:center;">
-    <div style="color:white; font-size:15px; font-weight:600; margin-bottom:20px;">Introdu PIN-ul</div>
-
-    <div id="pinDots" style="display:flex; justify-content:center; gap:12px; margin-bottom:24px;">
-      <div class="pin-dot"></div>
-      <div class="pin-dot"></div>
-      <div class="pin-dot"></div>
-      <div class="pin-dot"></div>
+<!-- PIN -->
+<div id="pinScreen">
+  <div class="pin-logo">WP<span>RO</span></div>
+  <div class="pin-box">
+    <div class="pin-title">Introdu PIN-ul</div>
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="pin-dot"></div><div class="pin-dot"></div>
     </div>
-
-    <div id="pinError" style="color:#FF6B6B; font-size:13px; margin-bottom:12px; min-height:18px;"></div>
-
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
-      <button onclick="pinKey('1')" class="pin-btn">1</button>
-      <button onclick="pinKey('2')" class="pin-btn">2</button>
-      <button onclick="pinKey('3')" class="pin-btn">3</button>
-      <button onclick="pinKey('4')" class="pin-btn">4</button>
-      <button onclick="pinKey('5')" class="pin-btn">5</button>
-      <button onclick="pinKey('6')" class="pin-btn">6</button>
-      <button onclick="pinKey('7')" class="pin-btn">7</button>
-      <button onclick="pinKey('8')" class="pin-btn">8</button>
-      <button onclick="pinKey('9')" class="pin-btn">9</button>
+    <div class="pin-error" id="pinError"></div>
+    <div class="pin-grid">
+      <button class="pin-btn" onclick="pinKey('1')">1</button>
+      <button class="pin-btn" onclick="pinKey('2')">2</button>
+      <button class="pin-btn" onclick="pinKey('3')">3</button>
+      <button class="pin-btn" onclick="pinKey('4')">4</button>
+      <button class="pin-btn" onclick="pinKey('5')">5</button>
+      <button class="pin-btn" onclick="pinKey('6')">6</button>
+      <button class="pin-btn" onclick="pinKey('7')">7</button>
+      <button class="pin-btn" onclick="pinKey('8')">8</button>
+      <button class="pin-btn" onclick="pinKey('9')">9</button>
       <div></div>
-      <button onclick="pinKey('0')" class="pin-btn">0</button>
-      <button onclick="pinKey('⌫')" class="pin-btn">⌫</button>
+      <button class="pin-btn" onclick="pinKey('0')">0</button>
+      <button class="pin-btn" onclick="pinKey('⌫')">⌫</button>
     </div>
   </div>
-
-  <div style="color:rgba(255,255,255,0.4); font-size:12px; margin-top:8px;">
-    PIN implicit: <strong style="color:rgba(255,255,255,0.6);">1234</strong> — schimbă-l din Configurare
-  </div>
+  <div class="pin-hint">PIN implicit: <strong style="color:rgba(255,255,255,0.7)">1234</strong></div>
 </div>
 
-<style>
-.pin-dot {
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.25);
-  transition: background 0.15s;
-}
-.pin-dot.filled { background: white; }
-.pin-btn {
-  background: rgba(255,255,255,0.12);
-  border: none;
-  border-radius: 12px;
-  color: white;
-  font-size: 22px;
-  font-weight: 500;
-  height: 60px;
-  cursor: pointer;
-  transition: background 0.1s;
-}
-.pin-btn:active { background: rgba(255,255,255,0.3); }
-</style>
-
-<!-- ===== LOADING OVERLAY ===== -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-spinner-big"></div>
+<!-- LOADING -->
+<div class="loading-overlay" id="loading">
+  <div class="spinner-big"></div>
   <div id="loadingText">Se procesează...</div>
 </div>
 
-<!-- ===== HEADER ===== -->
+<!-- HEADER -->
 <div class="header">
   <div class="header-logo">WP<span>RO</span></div>
-  <div class="header-right">
-    <button class="btn btn-ghost btn-sm" onclick="syncAll()" title="Sincronizează">↻ Sync</button>
-  </div>
+  <button class="btn btn-ghost btn-sm" onclick="syncFromSheet()">↻ Sync</button>
 </div>
 
-<!-- ===== NAV TABS ===== -->
+<!-- TABS -->
 <div class="nav-tabs">
   <button class="nav-tab active" onclick="showPage('orders')">📦 Comenzi</button>
-  <button class="nav-tab" onclick="showPage('upload')">⬆️ Upload PDF</button>
-  <button class="nav-tab" onclick="showPage('setup')">⚙️ Configurare</button>
+  <button class="nav-tab" onclick="showPage('upload')">⬆️ PDF Nou</button>
+  <button class="nav-tab" onclick="showPage('settings')">⚙️ Setări</button>
 </div>
 
-<!-- ===== PAGE: ORDERS ===== -->
+<!-- ORDERS PAGE -->
 <div class="page active" id="page-orders">
-  
-  <div class="stats-grid" id="statsGrid">
-    <div class="stat-card">
-      <div class="stat-value" id="stat-total">0</div>
-      <div class="stat-label">Total azi</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="stat-done" style="color:var(--green)">0</div>
-      <div class="stat-label">Gata</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="stat-packing" style="color:#1565C0">0</div>
-      <div class="stat-label">În pregătire</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value" id="stat-pending" style="color:var(--orange)">0</div>
-      <div class="stat-label">În așteptare</div>
-    </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total azi</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-done" style="color:var(--green)">0</div><div class="stat-label">Gata</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-packing" style="color:#1565C0">0</div><div class="stat-label">În pregătire</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-pending" style="color:var(--orange)">0</div><div class="stat-label">În așteptare</div></div>
   </div>
-
-  <div class="row" style="margin-bottom:12px; gap:8px; flex-wrap:wrap;">
-    <select class="form-input" style="flex:1; min-width:120px; padding:8px 12px; font-size:14px;" id="filterStatus" onchange="renderOrders()">
-      <option value="all">Toate statusurile</option>
+  <div class="row" style="margin-bottom:12px;gap:8px;flex-wrap:wrap;">
+    <select class="form-input" style="flex:1;min-width:130px;padding:8px 12px;font-size:14px;" id="filterStatus" onchange="renderOrders()">
+      <option value="all">Toate</option>
       <option value="pending">În așteptare</option>
       <option value="packing">În pregătire</option>
       <option value="ready">Gata</option>
       <option value="shipped">Expediat</option>
     </select>
-    <input type="date" class="form-input" style="flex:1; min-width:130px; padding:8px 12px; font-size:14px;" id="filterDate" onchange="renderOrders()">
+    <input type="date" class="form-input" style="flex:1;min-width:130px;padding:8px 12px;font-size:14px;" id="filterDate" onchange="renderOrders()">
   </div>
-
   <div id="ordersList"></div>
 </div>
 
-<!-- ===== PAGE: UPLOAD PDF ===== -->
+<!-- UPLOAD PAGE -->
 <div class="page" id="page-upload">
-  
-  <div class="alert alert-info">
-    <span>ℹ️</span>
-    <span>Upload proforma PDF din Oblio. Produsele se extrag automat și se creează comanda.</span>
+  <div class="alert alert-info" id="extractorStatus">
+    <span>🖥️</span><span>Extractorul PDF nu e conectat. Configurează adresa în Setări.</span>
   </div>
-
   <div class="card">
-    <div class="card-title">Proformă nouă</div>
-    
+    <div class="card-title">Proformă / Factură Nouă</div>
     <div class="upload-zone" id="uploadZone" onclick="document.getElementById('pdfInput').click()">
       <div class="upload-icon">📄</div>
       <div class="upload-text">Apasă pentru a selecta PDF</div>
-      <div class="upload-sub">sau trage fișierul aici</div>
+      <div class="upload-sub">Extractorul Flask trebuie să ruleze pe PC</div>
     </div>
-    <input type="file" id="pdfInput" accept=".pdf" style="display:none" onchange="handlePDFUpload(this)">
-
-    <div id="pdfPreview" style="display:none; margin-top:16px;">
-      <div class="alert alert-success">
-        <span>✅</span>
-        <div>
-          <div style="font-weight:600" id="pdfFileName">document.pdf</div>
-          <div style="font-size:12px; margin-top:2px" id="pdfStatus">Fișier selectat</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="extractedData" style="display:none; margin-top:16px;">
+    <input type="file" id="pdfInput" accept=".pdf" style="display:none" onchange="handlePDF(this)">
+    <div id="extractedSection" style="display:none;margin-top:16px;">
       <div class="divider"></div>
-      <div class="card-title">Date extrase din PDF</div>
-      
+      <div id="extractAlert" class="alert alert-success"><span>✅</span><span id="extractMsg">Date extrase</span></div>
       <div class="form-group">
         <label class="form-label">Client</label>
         <input type="text" class="form-input" id="clientName" placeholder="Nume client">
       </div>
-      
       <div class="form-group">
-        <label class="form-label">Nr. proformă</label>
-        <input type="text" class="form-input" id="invoiceNo" placeholder="ex: PF-2026-001">
+        <label class="form-label">Nr. document</label>
+        <input type="text" class="form-input" id="invoiceNo" placeholder="ex: CS 4245">
       </div>
-
       <div class="form-group">
         <label class="form-label">Data livrare (opțional)</label>
         <input type="date" class="form-input" id="deliveryDate">
       </div>
-
       <div class="form-group">
         <label class="form-label">Observații</label>
-        <input type="text" class="form-input" id="orderNotes" placeholder="ex: Ridicare personală, urgent, etc.">
+        <input type="text" class="form-input" id="orderNotes" placeholder="ex: Ridicare personală, urgent...">
       </div>
-
-      <div style="margin-bottom:8px; font-size:13px; font-weight:600; color:var(--text-muted);">PRODUSE EXTRASE</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div class="card-title" style="margin:0;">PRODUSE EXTRASE</div>
+      </div>
       <div id="productsList"></div>
-      
-      <button class="btn btn-ghost btn-sm" onclick="addManualProduct()" style="margin-bottom:16px; width:100%;">
-        ➕ Adaugă produs manual
-      </button>
-
-      <button class="btn btn-primary btn-full btn-lg" onclick="createOrder()">
-        ✅ Creează comanda
-      </button>
+      <button class="btn btn-ghost btn-sm" onclick="openAddProduct()" style="width:100%;margin-bottom:16px;">➕ Adaugă produs manual</button>
+      <button class="btn btn-primary btn-full btn-lg" onclick="createOrder()">✅ Creează Comanda</button>
     </div>
   </div>
 </div>
 
-<!-- ===== PAGE: SETUP ===== -->
-<div class="page" id="page-setup">
-  
+<!-- SETTINGS PAGE -->
+<div class="page" id="page-settings">
   <div class="setup-section">
-    <div class="setup-title">Conectare Google</div>
-    <div class="setup-sub">Necesară pentru a salva date și poze în Google Drive/Sheets</div>
-    
-    <div id="googleStatus">
-      <span class="disconnected-badge">● Neconectat</span>
+    <div class="setup-title">Extractor PDF (Flask)</div>
+    <div class="setup-sub">Adresa PC-ului lui Catalin unde rulează extractorul</div>
+    <div class="form-group">
+      <label class="form-label">Adresa extractor</label>
+      <input type="text" class="form-input" id="extractorUrl" placeholder="http://192.168.1.x:5001" onchange="saveSettings()">
     </div>
-    
+    <button class="btn btn-ghost btn-sm" onclick="testExtractor()">🔌 Testează conexiunea</button>
+    <div id="extractorTestResult" style="margin-top:8px;font-size:13px;"></div>
+  </div>
+
+  <div class="setup-section">
+    <div class="setup-title">Google Sheets & Drive</div>
+    <div class="setup-sub">Necesare pentru sincronizare date și poze</div>
+    <div id="googleStatus"><span class="disconnected-dot"></span>Neconectat</div>
     <div style="margin-top:12px;">
-      <button class="btn btn-primary" onclick="authGoogle()" id="btnAuthGoogle">
-        🔑 Conectează Google Account
-      </button>
+      <button class="btn btn-primary btn-sm" onclick="authGoogle()" id="btnGoogle">🔑 Conectează Google</button>
     </div>
-
     <div class="divider"></div>
-
     <div class="form-group">
       <label class="form-label">Google Sheet ID</label>
-      <input type="text" class="form-input" id="sheetId" placeholder="ID din URL-ul sheet-ului" 
-             onchange="saveConfig()" value="">
-      <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">
-        Din URL: docs.google.com/spreadsheets/d/<strong>ACESTA_E_ID</strong>/edit
-      </div>
+      <input type="text" class="form-input" id="sheetId" placeholder="ID din URL sheet" onchange="saveSettings()">
     </div>
-
     <div class="form-group">
-      <label class="form-label">Google Drive Folder ID (pentru poze)</label>
-      <input type="text" class="form-input" id="driveFolderId" placeholder="ID folder din Drive"
-             onchange="saveConfig()" value="">
+      <label class="form-label">Google Drive Folder ID (poze)</label>
+      <input type="text" class="form-input" id="driveFolderId" placeholder="ID folder Drive" onchange="saveSettings()">
     </div>
-
     <div class="form-group">
-      <label class="form-label">API Key (Google Cloud Console)</label>
-      <input type="text" class="form-input" id="apiKey" placeholder="AIza..."
-             onchange="saveConfig()" value="">
+      <label class="form-label">API Key</label>
+      <input type="text" class="form-input" id="apiKey" placeholder="AIza..." onchange="saveSettings()">
     </div>
-
     <div class="form-group">
-      <label class="form-label">Client ID (OAuth 2.0)</label>
-      <input type="text" class="form-input" id="clientId" placeholder="xxxx.apps.googleusercontent.com"
-             onchange="saveConfig()" value="">
+      <label class="form-label">Client ID</label>
+      <input type="text" class="form-input" id="clientId" placeholder="xxxx.apps.googleusercontent.com" onchange="saveSettings()">
     </div>
   </div>
 
   <div class="setup-section">
-    <div class="setup-title">Ghid de configurare</div>
-    <div class="step-list">
-      <div class="step-item">
-        Creează un proiect nou în <strong>Google Cloud Console</strong> (console.cloud.google.com)
-      </div>
-      <div class="step-item">
-        Activează <strong>Google Sheets API</strong> și <strong>Google Drive API</strong>
-      </div>
-      <div class="step-item">
-        Creează credențiale: <strong>API Key</strong> + <strong>OAuth 2.0 Client ID</strong> (tip: Web application). Adaugă URL-ul acestui fișier la "Authorized JavaScript origins"
-      </div>
-      <div class="step-item">
-        Creează un <strong>Google Sheet</strong> gol și copiază ID-ul din URL
-      </div>
-      <div class="step-item">
-        Creează un <strong>folder în Drive</strong> pentru poze și copiază ID-ul folderului
-      </div>
-      <div class="step-item">
-        Introdu toate datele de mai sus și apasă <strong>Conectează Google Account</strong>
-      </div>
-    </div>
-  </div>
-
-  <div class="setup-section">
-    <div class="setup-title">PIN acces aplicație</div>
-    <div class="setup-sub">PIN-ul implicit este 1234. Schimbă-l cu unul cunoscut doar de tine și Catalin.</div>
+    <div class="setup-title">PIN acces</div>
+    <div class="setup-sub">PIN implicit: 1234</div>
     <div class="form-group">
       <label class="form-label">PIN nou (4 cifre)</label>
-      <input type="number" class="form-input" id="newPin" placeholder="ex: 7391" maxlength="4" style="letter-spacing:8px; font-size:20px; font-weight:700;">
+      <input type="number" class="form-input" id="newPin" placeholder="ex: 5678" style="font-size:20px;letter-spacing:8px;font-weight:700;">
     </div>
-    <button class="btn btn-primary" onclick="savePin()">💾 Salvează PIN</button>
-  </div>
-
-  <div class="setup-section">
-    <div class="setup-title">Date locale</div>
-    <div class="setup-sub">Comenzile și configurarea se salvează și în browser (localStorage) ca backup</div>
-    <div class="row" style="gap:10px; flex-wrap:wrap;">
-      <button class="btn btn-ghost btn-sm" onclick="exportLocalData()">📥 Export date locale JSON</button>
-      <button class="btn btn-danger btn-sm" onclick="clearAllData()">🗑️ Șterge tot</button>
-    </div>
+    <button class="btn btn-primary btn-sm" onclick="savePin()">💾 Salvează PIN</button>
   </div>
 </div>
 
-<!-- ===== DETAIL OVERLAY ===== -->
+<!-- DETAIL OVERLAY -->
 <div class="detail-overlay" id="detailOverlay">
   <div class="detail-header">
     <button class="back-btn" onclick="closeDetail()">←</button>
@@ -987,1008 +324,118 @@ body {
   <div class="detail-content" id="detailContent"></div>
 </div>
 
-<!-- ===== ADD PRODUCT MODAL ===== -->
+<!-- ADD PRODUCT MODAL -->
 <div class="modal-overlay" id="addProductModal">
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Adaugă produs</div>
     <div class="form-group">
-      <label class="form-label">Denumire produs</label>
-      <input type="text" class="form-input" id="newProductName" placeholder="ex: Țeavă Cu PEX 1/4 50m">
+      <label class="form-label">Denumire</label>
+      <input type="text" class="form-input" id="newProdName" placeholder="ex: Teava PEX 1/4">
     </div>
     <div class="form-group">
       <label class="form-label">Cantitate</label>
-      <input type="number" class="form-input" id="newProductQty" placeholder="1" min="1">
+      <input type="number" class="form-input" id="newProdQty" placeholder="1" min="1">
     </div>
     <div class="form-group">
       <label class="form-label">Unitate</label>
-      <select class="form-input" id="newProductUnit">
-        <option>buc</option>
-        <option>colac</option>
-        <option>set</option>
-        <option>cutie</option>
-        <option>rolă</option>
-        <option>m</option>
-        <option>kg</option>
+      <select class="form-input" id="newProdUnit">
+        <option>buc</option><option>colac</option><option>set</option>
+        <option>cutie</option><option>rolă</option><option>m</option><option>kg</option>
       </select>
     </div>
-    <div class="row" style="gap:10px; margin-top:8px;">
-      <button class="btn btn-ghost flex-1" onclick="closeAddProductModal()">Anulează</button>
+    <div class="row" style="gap:10px;">
+      <button class="btn btn-ghost flex-1" onclick="document.getElementById('addProductModal').classList.remove('active')">Anulează</button>
       <button class="btn btn-primary flex-1" onclick="confirmAddProduct()">Adaugă</button>
     </div>
   </div>
 </div>
 
 <script>
-// ===== CONFIG & STATE =====
-let config = {
-  sheetId: '',
-  driveFolderId: '',
-  apiKey: '',
-  clientId: '',
-  isConnected: false
-};
-
+// ===== STATE =====
 let orders = [];
 let currentOrderId = null;
+let extractedProducts = [];
+let gapiReady = false;
+let isSignedIn = false;
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
 
-// ===== PIN LOGIC =====
+// ===== SETTINGS =====
+let cfg = {};
+function loadSettings() {
+  try { cfg = JSON.parse(localStorage.getItem('wpro_cfg') || '{}'); } catch(e) { cfg = {}; }
+  document.getElementById('extractorUrl').value = cfg.extractorUrl || '';
+  document.getElementById('sheetId').value = cfg.sheetId || '';
+  document.getElementById('driveFolderId').value = cfg.driveFolderId || '';
+  document.getElementById('apiKey').value = cfg.apiKey || '';
+  document.getElementById('clientId').value = cfg.clientId || '';
+  updateExtractorStatus();
+}
+function saveSettings() {
+  cfg.extractorUrl = document.getElementById('extractorUrl').value.trim().replace(/\/$/, '');
+  cfg.sheetId = document.getElementById('sheetId').value.trim();
+  cfg.driveFolderId = document.getElementById('driveFolderId').value.trim();
+  cfg.apiKey = document.getElementById('apiKey').value.trim();
+  cfg.clientId = document.getElementById('clientId').value.trim();
+  localStorage.setItem('wpro_cfg', JSON.stringify(cfg));
+  updateExtractorStatus();
+}
+
+function updateExtractorStatus() {
+  const el = document.getElementById('extractorStatus');
+  if (cfg.extractorUrl) {
+    el.className = 'alert alert-success';
+    el.innerHTML = `<span>🖥️</span><span>Extractor: <strong>${cfg.extractorUrl}</strong> — uploadează PDF pentru a extrage produsele.</span>`;
+  } else {
+    el.className = 'alert alert-warning';
+    el.innerHTML = `<span>⚠️</span><span>Adresa extractorului Flask nu e configurată. Du-te la Setări.</span>`;
+  }
+}
+
+async function testExtractor() {
+  const url = cfg.extractorUrl;
+  if (!url) { document.getElementById('extractorTestResult').textContent = '⚠️ Introdu adresa mai întâi'; return; }
+  try {
+    const r = await fetch(url + '/ping', { signal: AbortSignal.timeout(3000) });
+    const d = await r.json();
+    document.getElementById('extractorTestResult').innerHTML = `<span style="color:var(--green)">✅ ${d.status}</span>`;
+  } catch(e) {
+    document.getElementById('extractorTestResult').innerHTML = `<span style="color:var(--red)">❌ Nu se poate conecta. Verifică că porneste_extractor.bat rulează și adresa e corectă.</span>`;
+  }
+}
+
+// ===== PIN =====
 let pinInput = '';
-const DEFAULT_PIN = '1234';
-
-function getPin() {
-  return localStorage.getItem('wpro_pin') || DEFAULT_PIN;
-}
-
+function getPin() { return localStorage.getItem('wpro_pin') || '1234'; }
 function savePin() {
-  const val = document.getElementById('newPin').value.trim();
-  if (!/^\d{4}$/.test(val)) {
-    alert('PIN-ul trebuie să aibă exact 4 cifre!');
-    return;
-  }
-  localStorage.setItem('wpro_pin', val);
+  const v = document.getElementById('newPin').value.trim();
+  if (!/^\d{4}$/.test(v)) { alert('PIN trebuie să aibă 4 cifre!'); return; }
+  localStorage.setItem('wpro_pin', v);
   document.getElementById('newPin').value = '';
-  alert('✅ PIN salvat! Folosește-l data viitoare când deschizi aplicația.');
+  alert('✅ PIN salvat!');
 }
-
-function showPinScreen() {
-  const screen = document.getElementById('pinScreen');
-  screen.style.display = 'flex';
-  pinInput = '';
-  updatePinDots();
-}
-
-function hidePinScreen() {
-  document.getElementById('pinScreen').style.display = 'none';
-}
-
 function pinKey(k) {
-  if (k === '⌫') {
-    pinInput = pinInput.slice(0, -1);
-  } else if (pinInput.length < 4 && k !== '') {
-    pinInput += k;
-  }
-  updatePinDots();
-  if (pinInput.length === 4) {
-    setTimeout(checkPin, 150);
-  }
+  if (k === '⌫') pinInput = pinInput.slice(0,-1);
+  else if (pinInput.length < 4) pinInput += k;
+  document.querySelectorAll('.pin-dot').forEach((d,i) => d.classList.toggle('filled', i < pinInput.length));
+  if (pinInput.length === 4) setTimeout(checkPin, 150);
 }
-
-function updatePinDots() {
-  const dots = document.querySelectorAll('.pin-dot');
-  dots.forEach((d, i) => {
-    d.classList.toggle('filled', i < pinInput.length);
-  });
-}
-
 function checkPin() {
   if (pinInput === getPin()) {
-    hidePinScreen();
-    document.getElementById('pinError').textContent = '';
+    document.getElementById('pinScreen').style.display = 'none';
+    document.getElementById('filterDate').value = new Date().toISOString().split('T')[0];
+    loadSettings();
+    initGapi();
+    loadOrdersLocal();
+    syncFromSheet();
   } else {
-    document.getElementById('pinError').textContent = 'PIN greșit. Încearcă din nou.';
+    document.getElementById('pinError').textContent = 'PIN greșit!';
     pinInput = '';
-    updatePinDots();
-    // Shake animation
+    document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('filled'));
     const dots = document.getElementById('pinDots');
     dots.style.animation = 'shake 0.3s';
     setTimeout(() => dots.style.animation = '', 300);
   }
-}
-let gapiReady = false;
-let isSignedIn = false;
-
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
-
-// ===== INIT =====
-window.addEventListener('DOMContentLoaded', () => {
-  showPinScreen();
-  loadConfig();
-  loadLocalOrders();
-  renderOrders();
-  updateStats();
-  
-  // Set today as default filter date
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('filterDate').value = today;
-  
-  // Init GAPI
-  gapi.load('client:auth2', initGapi);
-  
-  // Drag & drop for PDF
-  const zone = document.getElementById('uploadZone');
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    zone.classList.remove('drag-over');
-    const file = e.dataTransfer.files[0];
-    if (file && file.type === 'application/pdf') processPDF(file);
-  });
-});
-
-// ===== CONFIG =====
-function loadConfig() {
-  try {
-    const saved = localStorage.getItem('wpro_config');
-    if (saved) {
-      config = { ...config, ...JSON.parse(saved) };
-      document.getElementById('sheetId').value = config.sheetId || '';
-      document.getElementById('driveFolderId').value = config.driveFolderId || '';
-      document.getElementById('apiKey').value = config.apiKey || '';
-      document.getElementById('clientId').value = config.clientId || '';
-    }
-  } catch(e) {}
-}
-
-function saveConfig() {
-  config.sheetId = document.getElementById('sheetId').value.trim();
-  config.driveFolderId = document.getElementById('driveFolderId').value.trim();
-  config.apiKey = document.getElementById('apiKey').value.trim();
-  config.clientId = document.getElementById('clientId').value.trim();
-  localStorage.setItem('wpro_config', JSON.stringify(config));
-}
-
-// ===== GOOGLE API =====
-function initGapi() {
-  if (!config.apiKey || !config.clientId) {
-    gapiReady = false;
-    return;
-  }
-  gapi.client.init({
-    apiKey: config.apiKey,
-    clientId: config.clientId,
-    scope: SCOPES,
-    discoveryDocs: [
-      'https://sheets.googleapis.com/$discovery/rest?version=v4',
-      'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
-    ]
-  }).then(() => {
-    gapiReady = true;
-    const auth = gapi.auth2.getAuthInstance();
-    isSignedIn = auth.isSignedIn.get();
-    updateGoogleStatus();
-    auth.isSignedIn.listen(signed => {
-      isSignedIn = signed;
-      updateGoogleStatus();
-      if (signed) syncAll();
-    });
-    if (isSignedIn) syncAll();
-  }).catch(e => {
-    console.warn('GAPI init failed:', e);
-    gapiReady = false;
-  });
-}
-
-function updateGoogleStatus() {
-  const el = document.getElementById('googleStatus');
-  const btn = document.getElementById('btnAuthGoogle');
-  if (isSignedIn) {
-    el.innerHTML = '<span class="connected-badge">● Conectat</span>';
-    btn.textContent = '🔓 Deconectează';
-    btn.onclick = () => gapi.auth2.getAuthInstance().signOut();
-  } else {
-    el.innerHTML = '<span class="disconnected-badge">● Neconectat</span>';
-    btn.textContent = '🔑 Conectează Google Account';
-    btn.onclick = authGoogle;
-  }
-}
-
-function authGoogle() {
-  saveConfig();
-  if (!gapiReady) {
-    gapi.load('client:auth2', () => {
-      initGapi();
-      setTimeout(() => {
-        if (gapiReady) gapi.auth2.getAuthInstance().signIn();
-        else alert('Completează mai întâi API Key și Client ID în setări!');
-      }, 2000);
-    });
-    return;
-  }
-  gapi.auth2.getAuthInstance().signIn();
-}
-
-// ===== LOCAL ORDERS =====
-function loadLocalOrders() {
-  try {
-    const saved = localStorage.getItem('wpro_orders');
-    if (saved) orders = JSON.parse(saved);
-  } catch(e) { orders = []; }
-}
-
-function saveLocalOrders() {
-  localStorage.setItem('wpro_orders', JSON.stringify(orders));
-}
-
-function generateId() {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-}
-
-// ===== SYNC WITH SHEETS =====
-async function syncAll() {
-  if (!isSignedIn || !config.sheetId) return;
-  
-  try {
-    showLoading('Se sincronizează cu Google...');
-    
-    // Read from sheet
-    const resp = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: config.sheetId,
-      range: 'Comenzi!A2:Z'
-    });
-    
-    const rows = resp.result.values || [];
-    const sheetOrders = rows.map(r => ({
-      id: r[0], date: r[1], client: r[2], invoiceNo: r[3],
-      status: r[4], notes: r[5] || '',
-      products: JSON.parse(r[6] || '[]'),
-      photos: JSON.parse(r[7] || '[]'),
-      deliveryDate: r[8] || ''
-    })).filter(o => o.id);
-    
-    // Merge: sheet is source of truth, add local-only orders
-    const sheetIds = new Set(sheetOrders.map(o => o.id));
-    const localOnly = orders.filter(o => !sheetIds.has(o.id));
-    orders = [...sheetOrders, ...localOnly];
-    
-    // Push local-only to sheet
-    for (const o of localOnly) {
-      await appendOrderToSheet(o);
-    }
-    
-    saveLocalOrders();
-    renderOrders();
-    updateStats();
-    hideLoading();
-  } catch(e) {
-    hideLoading();
-    console.warn('Sync error:', e);
-    // Sheet might need header row
-    if (e.result && e.result.error && e.result.error.code === 400) {
-      await initSheet();
-      syncAll();
-    }
-  }
-}
-
-async function initSheet() {
-  if (!isSignedIn || !config.sheetId) return;
-  const headers = [['ID', 'Data', 'Client', 'Nr. Proformă', 'Status', 'Observații', 'Produse (JSON)', 'Poze (JSON)', 'Data livrare']];
-  await gapi.client.sheets.spreadsheets.values.update({
-    spreadsheetId: config.sheetId,
-    range: 'Comenzi!A1:I1',
-    valueInputOption: 'RAW',
-    resource: { values: headers }
-  });
-}
-
-async function appendOrderToSheet(order) {
-  if (!isSignedIn || !config.sheetId) return;
-  const row = [[
-    order.id, order.date, order.client, order.invoiceNo,
-    order.status, order.notes || '',
-    JSON.stringify(order.products || []),
-    JSON.stringify(order.photos || []),
-    order.deliveryDate || ''
-  ]];
-  await gapi.client.sheets.spreadsheets.values.append({
-    spreadsheetId: config.sheetId,
-    range: 'Comenzi!A:I',
-    valueInputOption: 'RAW',
-    insertDataOption: 'INSERT_ROWS',
-    resource: { values: row }
-  });
-}
-
-async function updateOrderInSheet(order) {
-  if (!isSignedIn || !config.sheetId) return;
-  try {
-    // Find row index
-    const resp = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: config.sheetId,
-      range: 'Comenzi!A:A'
-    });
-    const ids = (resp.result.values || []).map(r => r[0]);
-    const rowIdx = ids.indexOf(order.id);
-    if (rowIdx < 1) { await appendOrderToSheet(order); return; }
-    
-    const rowNum = rowIdx + 1;
-    const row = [[
-      order.id, order.date, order.client, order.invoiceNo,
-      order.status, order.notes || '',
-      JSON.stringify(order.products || []),
-      JSON.stringify(order.photos || []),
-      order.deliveryDate || ''
-    ]];
-    await gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: config.sheetId,
-      range: `Comenzi!A${rowNum}:I${rowNum}`,
-      valueInputOption: 'RAW',
-      resource: { values: row }
-    });
-  } catch(e) { console.warn('Update sheet error:', e); }
-}
-
-// ===== PDF PROCESSING =====
-function handlePDFUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-  processPDF(file);
-}
-
-async function processPDF(file) {
-  showLoading('Se citește PDF-ul...');
-  document.getElementById('pdfPreview').style.display = 'block';
-  document.getElementById('pdfFileName').textContent = file.name;
-  document.getElementById('pdfStatus').textContent = 'Se extrage textul...';
-
-  try {
-    if (!window.pdfjsLib) {
-      await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    }
-
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    
-    // Process each page SEPARATELY to avoid cross-page line mixing
-    const allLines = [];
-    for (let p = 1; p <= pdf.numPages; p++) {
-      const page = await pdf.getPage(p);
-      const content = await page.getTextContent();
-      const viewport = page.getViewport({ scale: 1 });
-      const pageWidth = viewport.width;
-      
-      // Group items by Y coordinate (per page)
-      const lineMap = {};
-      for (const item of content.items) {
-        if (!item.str.trim()) continue;
-        const y = Math.round(item.transform[5]);
-        const x = Math.round(item.transform[4]);
-        if (!lineMap[y]) lineMap[y] = [];
-        lineMap[y].push({ str: item.str, x });
-      }
-      
-      // Sort Y descending (top to bottom), X ascending within each line
-      const sortedYs = Object.keys(lineMap).map(Number).sort((a, b) => b - a);
-      for (const y of sortedYs) {
-        const items = lineMap[y].sort((a, b) => a.x - b.x);
-        // Only take items from LEFT half of page (skip right column = page 2 content)
-        // Oblio puts product table in left ~85% of page width
-        const filtered = items.filter(it => it.x < pageWidth * 0.85);
-        const lineStr = filtered.map(i => i.str).join(' ').trim();
-        if (lineStr) allLines.push(lineStr);
-      }
-    }
-
-    const fullText = allLines.join('\n');
-    
-    // DEBUG
-    window._pdfDebugLines = allLines;
-    console.log('PDF lines extracted:', allLines.length);
-    allLines.forEach((l, i) => console.log(i, l));
-
-    const result = parseOblioText(fullText);
-
-    document.getElementById('clientName').value = result.client || '';
-    document.getElementById('invoiceNo').value = result.invoiceNo || '';
-    renderExtractedProducts(result.products || []);
-
-    const count = result.products.length;
-    document.getElementById('pdfStatus').textContent = count > 0
-      ? `✅ ${count} produse extrase — verifică și confirmă`
-      : '⚠️ Nu s-au găsit produse — adaugă manual';
-    document.getElementById('extractedData').style.display = 'block';
-    hideLoading();
-
-  } catch(e) {
-    hideLoading();
-    document.getElementById('pdfStatus').textContent = '⚠️ Eroare — completează manual';
-    renderExtractedProducts([]);
-    document.getElementById('extractedData').style.display = 'block';
-    console.warn('PDF error:', e);
-  }
-}
-
-function repr(s) { return s; }
-
-function loadScript(src) {
-  return new Promise((resolve, reject) => {
-    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
-    const s = document.createElement('script');
-    s.src = src;
-    s.onload = resolve;
-    s.onerror = reject;
-    document.head.appendChild(s);
-  });
-}
-
-function parseOblioText(text) {
-  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-
-  let invoiceNo = '';
-  for (const line of lines) {
-    const m = line.match(/(?:Factura|Proforma)\s+([A-Z]{2,3}\s*\d+)/i);
-    if (m) { invoiceNo = m[1].trim(); break; }
-  }
-
-  let client = '';
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].match(/^Client:?$/i) || lines[i].match(/Furnizor:.*Client:/i)) {
-      for (let j = i + 1; j < Math.min(i + 6, lines.length); j++) {
-        const c = lines[j];
-        if (c && !c.match(/^(Furnizor|Reg\.|CIF:|Adresa:|COMPLEX SERVICE|Nr\.|Pret)/i)) {
-          client = c.replace(/\s+COMPLEX SERVICE.*$/i, '').trim();
-          if (j + 1 < lines.length) {
-            const next = lines[j+1];
-            if (next && !next.match(/^(Reg\.|CIF:|Adresa:|Tel\.|Judet|Tara|IBAN)/i) && !next.match(/^\d/) && next.length < 50) {
-              client += ' ' + next;
-            }
-          }
-          break;
-        }
-      }
-      break;
-    }
-  }
-
-  const SKU_MAP = {
-    "BEL":{"name":"Banda electroizolatoare 19mm x 20 metri alba","unit":"buc"},
-    "BM25X90":{"name":"Banda matisat 25ml x 90mm","unit":"buc"},
-    "CE315":{"name":"Cablu electric Cupru MYYM 3x1.5mm - 100m","unit":"colac"},
-    "CE325":{"name":"Cablu electric Cupru MYYM 3x2.5mm - 100m","unit":"colac"},
-    "CE415":{"name":"Cablu electric Cupru MYYM 4x1.5mm - 100m","unit":"colac"},
-    "CE515":{"name":"Cablu electric Cupru MYYM 5x1.5mm - 100m","unit":"colac"},
-    "CE525":{"name":"Cablu electric Cupru MYYM 5x2.5mm - 100m","unit":"colac"},
-    "CRM50X55":{"name":"Console Rabatabile Mari 500x550","unit":"buc"},
-    "D01":{"name":"Deflector AC","unit":"buc"},
-    "DH100":{"name":"Diblu 12 x 100 + Holsurub 8 x 100","unit":"set"},
-    "DH160":{"name":"Diblu 12 x 160 + Holsurub 8 x 160","unit":"set"},
-    "DH180":{"name":"Diblu 12 x 180 + Holsurub 8 x 180","unit":"set"},
-    "DH200":{"name":"Diblu 12 x 200 + Holsurub 8 x 200","unit":"set"},
-    "3DH260":{"name":"Diblu 12 x 260 + Holsurub 8 x 260","unit":"set"},
-    "DAM1332":{"name":"Diblu Autoforant Metalic tip melc 13x32","unit":"buc"},
-    "DAM14-40":{"name":"Diblu Autoforant Metalic 14x40 - Cutie 100 buc","unit":"cutie"},
-    "DSP640":{"name":"Diblu cu surub cui percutie 6x40mm Klimas - Cutie 200 buc","unit":"cutie"},
-    "DSP660":{"name":"Diblu cu surub cui percutie 6x60mm Klimas - Cutie 200 buc","unit":"cutie"},
-    "DSP680":{"name":"Diblu cu surub cui percutie 6x80mm Klimas - Cutie 100 buc","unit":"cutie"},
-    "DSP860":{"name":"Diblu cu surub cui percutie 8x60mm Klimas - Cutie 100 buc","unit":"cutie"},
-    "FD50":{"name":"Furtun Drenaj 5/8 - 50m","unit":"colac"},
-    "FG912":{"name":"Suport Fix Galvanizat 9000-12000 BTU","unit":"buc"},
-    "HL12":{"name":"Holender 1/2","unit":"buc"},
-    "HL14":{"name":"Holender 1/4","unit":"buc"},
-    "HL38":{"name":"Holender 3/8","unit":"buc"},
-    "JAB1L":{"name":"Solutie Jab 1L","unit":"buc"},
-    "JAB5L":{"name":"Solutie Jab 5L","unit":"buc"},
-    "NI12":{"name":"Niplu 1/2","unit":"buc"},
-    "NI-14":{"name":"Niplu 1/4","unit":"buc"},
-    "NI-38":{"name":"Niplu 3/8","unit":"buc"},
-    "AG35":{"name":"Pachet Amortizoare AC AG35 - 4 buc","unit":"buc"},
-    "R39X45":{"name":"Set Console Rabatabile Mici 390x450A","unit":"set"},
-    "S8X24X1.5":{"name":"Saiba DIN440 M8 24x1.5","unit":"buc"},
-    "S8X24X2":{"name":"Saiba DIN 9021 M8x24x2","unit":"buc"},
-    "SCI":{"name":"Stecher Ceramica cu Inel","unit":"buc"},
-    "SAA912L":{"name":"Suporti Albi Ambutisati 9000-12000 BTU L470","unit":"buc"},
-    "SAA1824":{"name":"Suporti Albi Ambutisati 18000-24000 BTU L530","unit":"buc"},
-    "SRA912":{"name":"Suporti Albi Rabatabili 9000-12000 BTU L450","unit":"buc"},
-    "SRA1824":{"name":"Suporti Albi Rabatabili 18000-24000 BTU L550","unit":"buc"},
-    "SP45":{"name":"Suporti Pardoseala 450x150 mm","unit":"buc"},
-    "SPS830":{"name":"Surub metric 8x30 + Piulita M8 + Saiba M8 24x1.5","unit":"set"},
-    "SPS840":{"name":"Surub metric 8x40 + Piulita M8 + Saiba M8 24x1.5","unit":"set"},
-    "AVB450":{"name":"Tampon amortizor anti-vibratii AVB-450","unit":"buc"},
-    "TI14":{"name":"Teava Halcor Cu PEX ACR 1/4 - colac 50m","unit":"colac"},
-    "TI38":{"name":"Teava Halcor Cu PEX ACR 3/8 - colac 50m","unit":"colac"},
-    "TI12":{"name":"Teava Halcor Cu PEX ACR 1/2 - colac 50m","unit":"colac"},
-    "TI58":{"name":"Teava Halcor Cu PEX ACR 5/8 - colac 25m","unit":"colac"},
-    "TI34":{"name":"Teava Halcor Cu PEX ACR 3/4 - colac 25m","unit":"colac"},
-    "TI78":{"name":"Teava Halcor Cu PEX ACR 7/8 - colac 15m","unit":"colac"},
-    "OTT1/4":{"name":"Teava Cupru Izolata 1/4 Ottocool - 50m","unit":"colac"},
-    "OTT3/8":{"name":"Teava Cupru Izolata 3/8 Ottocool - 50m","unit":"colac"},
-    "TWIN1438":{"name":"Teava Halcor Twin 1/4+3/8 - 20m","unit":"colac"},
-    "TWIN1412":{"name":"Teava Halcor Twin 1/4+1/2 - 20m","unit":"colac"},
-    "U1NANO":{"name":"Solutie Universal NANO 1L","unit":"buc"},
-    "U5NANO":{"name":"Solutie Universal NANO 5L","unit":"buc"},
-    "HUSA":{"name":"Husa curatare AC","unit":"buc"}
-  };
-
-  const SKIP = ['discount', 'transport', 'subtotal', 'total', 'pagina', 'index', 'aceasta', 'intocmit'];
-  const endRx = /\b(set|buc|colac|cutie|rola|BUC|SET|COLAC)\s+(\d+)\s+[\d.,]+\s+[\d.,]+\s+[\d.,]+\s*$/i;
-  const products = [];
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const numMatch = line.match(/^(\d{1,2})\s+\(([^)]+)\)\s*(.+)/);
-    if (!numMatch) continue;
-
-    const skuRaw = numMatch[2].trim();
-    const sku = skuRaw.toUpperCase();
-    const restOfLine = numMatch[3];
-    const lower = restOfLine.toLowerCase();
-    if (SKIP.some(s => lower.startsWith(s))) continue;
-
-    let endMatch = endRx.exec(line);
-    if (!endMatch && i + 1 < lines.length && !lines[i+1].match(/^\d{1,2}\s+/)) {
-      const combined = line + ' ' + lines[i+1];
-      endMatch = endRx.exec(combined);
-      if (endMatch) i++;
-    }
-
-    if (!endMatch) continue;
-
-    const qty = parseInt(endMatch[2]);
-    if (qty <= 0) continue;
-
-    const catalogItem = SKU_MAP[sku] || SKU_MAP[skuRaw];
-    if (catalogItem) {
-      products.push({ name: catalogItem.name, qty, unit: catalogItem.unit });
-    } else {
-      let name = restOfLine.replace(/\|.*$/, '').trim();
-      const ei = name.search(/\b(set|buc|colac|cutie)\s+\d+/i);
-      if (ei > 0) name = name.substring(0, ei).trim();
-      products.push({ name: name || sku, qty, unit: endMatch[1].toLowerCase() });
-    }
-  }
-
-  return { client: client.trim(), invoiceNo, products };
-}
-
-
-function renderExtractedProducts(products) {
-  const container = document.getElementById('productsList');
-  
-  if (!window._extractedProducts) window._extractedProducts = [];
-  window._extractedProducts = products;
-  
-  container.innerHTML = products.map((p, i) => `
-    <div style="background:var(--gray-light); border-radius:var(--radius-sm); padding:12px; margin-bottom:8px; display:flex; align-items:center; gap:10px;" id="ep-${i}">
-      <div style="flex:1;">
-        <div style="font-size:14px; font-weight:600;">${escHtml(p.name)}</div>
-        <div style="font-size:12px; color:var(--text-muted);">${p.qty} ${p.unit}</div>
-      </div>
-      <button onclick="removeExtractedProduct(${i})" style="background:var(--red-light); border:none; color:var(--red); border-radius:6px; padding:4px 8px; cursor:pointer; font-size:16px;">✕</button>
-    </div>
-  `).join('') || '<div style="color:var(--text-muted); font-size:14px; padding:8px 0;">Niciun produs extras. Adaugă manual.</div>';
-}
-
-function removeExtractedProduct(idx) {
-  window._extractedProducts.splice(idx, 1);
-  renderExtractedProducts(window._extractedProducts);
-}
-
-function addManualProduct() {
-  document.getElementById('newProductName').value = '';
-  document.getElementById('newProductQty').value = '';
-  document.getElementById('addProductModal').classList.add('active');
-}
-
-function closeAddProductModal() {
-  document.getElementById('addProductModal').classList.remove('active');
-}
-
-function confirmAddProduct() {
-  const name = document.getElementById('newProductName').value.trim();
-  const qty = parseInt(document.getElementById('newProductQty').value) || 1;
-  const unit = document.getElementById('newProductUnit').value;
-  
-  if (!name) return;
-  
-  if (!window._extractedProducts) window._extractedProducts = [];
-  window._extractedProducts.push({ name, qty, unit });
-  renderExtractedProducts(window._extractedProducts);
-  closeAddProductModal();
-}
-
-async function createOrder() {
-  const client = document.getElementById('clientName').value.trim();
-  const invoiceNo = document.getElementById('invoiceNo').value.trim();
-  const notes = document.getElementById('orderNotes').value.trim();
-  const deliveryDate = document.getElementById('deliveryDate').value;
-  const products = (window._extractedProducts || []).map(p => ({
-    ...p,
-    checked: false,
-    id: generateId()
-  }));
-  
-  if (!client) { alert('Completează numele clientului!'); return; }
-  if (products.length === 0) { alert('Adaugă cel puțin un produs!'); return; }
-  
-  const order = {
-    id: generateId(),
-    date: new Date().toISOString().split('T')[0],
-    client, invoiceNo, notes, deliveryDate,
-    status: 'pending',
-    products,
-    photos: [],
-    createdAt: new Date().toISOString()
-  };
-  
-  orders.unshift(order);
-  saveLocalOrders();
-  
-  // Push to sheet
-  showLoading('Se salvează comanda...');
-  try {
-    if (isSignedIn && config.sheetId) {
-      await appendOrderToSheet(order);
-    }
-  } catch(e) { console.warn('Sheet save error:', e); }
-  hideLoading();
-  
-  // Reset upload form
-  document.getElementById('pdfPreview').style.display = 'none';
-  document.getElementById('extractedData').style.display = 'none';
-  document.getElementById('pdfInput').value = '';
-  window._extractedProducts = [];
-  document.getElementById('clientName').value = '';
-  document.getElementById('invoiceNo').value = '';
-  document.getElementById('orderNotes').value = '';
-  document.getElementById('deliveryDate').value = '';
-  
-  updateStats();
-  renderOrders();
-  showPage('orders');
-  
-  // Open new order
-  setTimeout(() => openOrder(order.id), 300);
-}
-
-// ===== ORDERS RENDER =====
-function renderOrders() {
-  const container = document.getElementById('ordersList');
-  const statusFilter = document.getElementById('filterStatus').value;
-  const dateFilter = document.getElementById('filterDate').value;
-  
-  let filtered = [...orders];
-  if (statusFilter !== 'all') filtered = filtered.filter(o => o.status === statusFilter);
-  if (dateFilter) filtered = filtered.filter(o => o.date === dateFilter);
-  
-  if (filtered.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">📭</div>
-        <div class="empty-text">Nicio comandă</div>
-        <div class="empty-sub">Adaugă o proformă din tab-ul Upload PDF</div>
-      </div>`;
-    return;
-  }
-  
-  container.innerHTML = filtered.map(order => {
-    const done = order.products.filter(p => p.checked).length;
-    const total = order.products.length;
-    const pct = total > 0 ? Math.round((done/total)*100) : 0;
-    const statusConfig = getStatusConfig(order.status);
-    const isComplete = order.status === 'ready' || order.status === 'shipped';
-    
-    return `
-      <div class="order-card ${isComplete ? 'done' : ''}" onclick="openOrder('${order.id}')">
-        <div class="order-header">
-          <div>
-            <div class="order-client">${escHtml(order.client)}</div>
-            <div class="order-meta">
-              ${order.invoiceNo ? `<span class="tag">${escHtml(order.invoiceNo)}</span>` : ''}
-              ${order.deliveryDate ? `🚚 ${formatDate(order.deliveryDate)}` : ''}
-            </div>
-          </div>
-          <span class="badge badge-${order.status}">${statusConfig.label}</span>
-        </div>
-        
-        <div class="order-footer">
-          <div class="order-progress">
-            <div class="progress-bar">
-              <div class="progress-fill ${pct === 100 ? 'complete' : ''}" style="width:${pct}%"></div>
-            </div>
-            <span>${done}/${total} produse</span>
-          </div>
-          <div class="photo-indicator">
-            📷 ${order.photos.length}
-          </div>
-        </div>
-      </div>`;
-  }).join('');
-}
-
-function getStatusConfig(status) {
-  const map = {
-    pending: { label: 'În așteptare', icon: '⏳' },
-    packing: { label: 'În pregătire', icon: '📦' },
-    ready: { label: 'Gata ✓', icon: '✅' },
-    shipped: { label: 'Expediat', icon: '🚚' }
-  };
-  return map[status] || map.pending;
-}
-
-function updateStats() {
-  const today = new Date().toISOString().split('T')[0];
-  const todayOrders = orders.filter(o => o.date === today);
-  
-  document.getElementById('stat-total').textContent = todayOrders.length;
-  document.getElementById('stat-done').textContent = todayOrders.filter(o => o.status === 'ready' || o.status === 'shipped').length;
-  document.getElementById('stat-packing').textContent = todayOrders.filter(o => o.status === 'packing').length;
-  document.getElementById('stat-pending').textContent = todayOrders.filter(o => o.status === 'pending').length;
-}
-
-// ===== ORDER DETAIL =====
-function openOrder(id) {
-  currentOrderId = id;
-  const order = orders.find(o => o.id === id);
-  if (!order) return;
-  
-  document.getElementById('detailTitle').textContent = order.client;
-  const sc = getStatusConfig(order.status);
-  document.getElementById('detailBadge').innerHTML = `<span class="badge badge-${order.status}" style="font-size:11px;">${sc.label}</span>`;
-  
-  renderDetailContent(order);
-  document.getElementById('detailOverlay').classList.add('active');
-}
-
-function renderDetailContent(order) {
-  const done = order.products.filter(p => p.checked).length;
-  const total = order.products.length;
-  const allChecked = done === total && total > 0;
-  
-  const html = `
-    ${order.invoiceNo ? `<div class="alert alert-info" style="margin-bottom:12px;">
-      <span>📄</span>
-      <span><strong>${escHtml(order.invoiceNo)}</strong> · ${formatDate(order.date)}${order.deliveryDate ? ` · Livrare: ${formatDate(order.deliveryDate)}` : ''}</span>
-    </div>` : ''}
-    
-    ${order.notes ? `<div class="alert alert-warning">
-      <span>⚠️</span>
-      <span>${escHtml(order.notes)}</span>
-    </div>` : ''}
-    
-    <div class="card" style="margin-bottom:12px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <div class="card-title" style="margin:0;">CHECKLIST PRODUSE</div>
-        <span style="font-size:13px; font-weight:700; color:${allChecked ? 'var(--green)' : 'var(--blue)'}">
-          ${done}/${total}
-        </span>
-      </div>
-      
-      <div class="progress-bar" style="width:100%; height:8px; margin-bottom:16px;">
-        <div class="progress-fill ${allChecked ? 'complete' : ''}" style="width:${total > 0 ? Math.round(done/total*100) : 0}%; height:8px;"></div>
-      </div>
-      
-      <div id="checklistItems">
-        ${order.products.map((p, i) => `
-          <div class="checklist-item ${p.checked ? 'checked' : ''}" onclick="toggleItem(${i})">
-            <div class="checkbox ${p.checked ? 'checked' : ''}">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8l3.5 3.5L13 4.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div class="item-info">
-              <div class="item-name">${escHtml(p.name)}</div>
-            </div>
-            <div class="qty-badge">${p.qty}<span style="font-size:11px; font-weight:400;"> ${p.unit}</span></div>
-          </div>
-        `).join('')}
-      </div>
-      
-      ${allChecked ? `<div class="alert alert-success" style="margin-top:12px;">
-        <span>🎉</span>
-        <span><strong>Toate produsele bifate!</strong> Fă pozele cutiei și marchează gata.</span>
-      </div>` : ''}
-    </div>
-    
-    <div class="card" style="margin-bottom:12px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <div class="card-title" style="margin:0;">POZE COLETE (${order.photos.length})</div>
-      </div>
-      
-      <div class="photo-grid" id="photoGrid">
-        ${order.photos.map((ph, i) => `
-          <div class="photo-thumb">
-            <img src="${ph.url}" alt="Foto ${i+1}" onclick="viewPhoto('${ph.url}')" loading="lazy">
-            <button class="photo-delete" onclick="event.stopPropagation(); deletePhoto(${i})">✕</button>
-          </div>
-        `).join('')}
-        <label class="add-photo-btn" for="photoInput">
-          <span style="font-size:28px;">📷</span>
-          <span>Adaugă poze</span>
-        </label>
-      </div>
-      <input type="file" id="photoInput" accept="image/*" multiple capture="environment" 
-             style="display:none" onchange="handlePhotoUpload(this)">
-    </div>
-    
-    <div class="card" style="margin-bottom:12px;">
-      <div class="card-title">STATUS COMANDĂ</div>
-      <div class="row" style="flex-wrap:wrap; gap:8px;">
-        ${['pending','packing','ready','shipped'].map(s => {
-          const sc = getStatusConfig(s);
-          const isActive = order.status === s;
-          return `<button 
-            onclick="changeStatus('${s}')" 
-            class="btn ${isActive ? 'btn-primary' : 'btn-ghost'}" 
-            style="flex:1; min-width:100px; font-size:13px;">
-            ${sc.icon} ${sc.label}
-          </button>`;
-        }).join('')}
-      </div>
-    </div>
-    
-    <button class="btn btn-danger btn-full" onclick="deleteOrder()">🗑️ Șterge comanda</button>
-    <div style="height:30px;"></div>
-  `;
-  
-  document.getElementById('detailContent').innerHTML = html;
-}
-
-async function toggleItem(idx) {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  
-  order.products[idx].checked = !order.products[idx].checked;
-  
-  // Auto-advance status to packing if first item checked
-  if (order.products[idx].checked && order.status === 'pending') {
-    order.status = 'packing';
-  }
-  
-  const allDone = order.products.every(p => p.checked);
-  if (allDone && order.status === 'packing') {
-    // Don't auto-set ready, let user do it after photos
-  }
-  
-  saveLocalOrders();
-  renderDetailContent(order);
-  updateStats();
-  
-  // Sync
-  if (isSignedIn && config.sheetId) {
-    updateOrderInSheet(order).catch(() => {});
-  }
-}
-
-async function changeStatus(newStatus) {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-
-  if (newStatus === 'ready' || newStatus === 'shipped') {
-    const total = order.products.length;
-    const done = order.products.filter(p => p.checked).length;
-    if (done < total) {
-      const remaining = total - done;
-      const names = order.products.filter(p => !p.checked).map(p => `• ${p.qty} ${p.unit} ${p.name}`).join('\n');
-      alert(`⛔ Nu poți marca "Gata" — mai ai ${remaining} produs${remaining > 1 ? 'e' : ''} nebifat${remaining > 1 ? 'e' : ''}:\n\n${names}`);
-      return;
-    }
-    if (order.photos.length === 0 && newStatus === 'ready') {
-      const ok = confirm('⚠️ Nu ai nicio poză atașată.\nContinui fără poze?');
-      if (!ok) return;
-    }
-  }
-
-  order.status = newStatus;
-  saveLocalOrders();
-  updateStats();
-  renderOrders();
-  renderDetailContent(order);
-  
-  // Update sheet badge
-  document.getElementById('detailBadge').innerHTML = `<span class="badge badge-${order.status}" style="font-size:11px;">${getStatusConfig(order.status).label}</span>`;
-  
-  if (isSignedIn && config.sheetId) {
-    updateOrderInSheet(order).catch(() => {});
-  }
-}
-
-// ===== PHOTOS =====
-async function handlePhotoUpload(input) {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  
-  const files = Array.from(input.files);
-  if (!files.length) return;
-  
-  showLoading(`Se încarcă ${files.length} poze...`);
-  
-  for (const file of files) {
-    try {
-      if (isSignedIn && config.driveFolderId) {
-        // Upload to Drive
-        const url = await uploadToDrive(file, order);
-        order.photos.push({ url, name: file.name, driveId: url });
-      } else {
-        // Fallback: store as base64 locally
-        const base64 = await fileToBase64WithPrefix(file);
-        order.photos.push({ url: base64, name: file.name });
-      }
-    } catch(e) {
-      console.warn('Photo upload error:', e);
-      // Fallback to local
-      const base64 = await fileToBase64WithPrefix(file);
-      order.photos.push({ url: base64, name: file.name });
-    }
-  }
-  
-  saveLocalOrders();
-  renderDetailContent(order);
-  hideLoading();
-  
-  // Update sheet
-  if (isSignedIn && config.sheetId) {
-    updateOrderInSheet(order).catch(() => {});
-  }
-  
-  input.value = '';
-}
-
-async function uploadToDrive(file, order) {
-  const metadata = {
-    name: `${order.id}_${order.client}_${file.name}`,
-    parents: [config.driveFolderId]
-  };
-  
-  const form = new FormData();
-  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-  form.append('file', file);
-  
-  const resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,webContentLink', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token}` },
-    body: form
-  });
-  
-  const data = await resp.json();
-  
-  // Make file viewable by anyone with link for download
-  await gapi.client.drive.permissions.create({
-    fileId: data.id,
-    resource: { role: 'reader', type: 'anyone' }
-  });
-  
-  return `https://drive.google.com/uc?id=${data.id}&export=download`;
-}
-
-function deletePhoto(idx) {
-  const order = orders.find(o => o.id === currentOrderId);
-  if (!order) return;
-  if (!confirm('Ștergi această poză?')) return;
-  order.photos.splice(idx, 1);
-  saveLocalOrders();
-  renderDetailContent(order);
-  if (isSignedIn && config.sheetId) updateOrderInSheet(order).catch(() => {});
-}
-
-function viewPhoto(url) {
-  window.open(url, '_blank');
-}
-
-function deleteOrder() {
-  if (!confirm('Ștergi această comandă?')) return;
-  orders = orders.filter(o => o.id !== currentOrderId);
-  saveLocalOrders();
-  updateStats();
-  renderOrders();
-  closeDetail();
-}
-
-function closeDetail() {
-  document.getElementById('detailOverlay').classList.remove('active');
-  currentOrderId = null;
 }
 
 // ===== NAVIGATION =====
@@ -2000,62 +447,454 @@ function showPage(name) {
     if (t.getAttribute('onclick').includes("'" + name + "'")) t.classList.add('active');
   });
 }
+function showLoading(t) { document.getElementById('loadingText').textContent = t; document.getElementById('loading').classList.add('active'); }
+function hideLoading() { document.getElementById('loading').classList.remove('active'); }
+
+// ===== GOOGLE API =====
+function initGapi() {
+  if (!cfg.apiKey || !cfg.clientId) return;
+  gapi.load('client:auth2', () => {
+    gapi.client.init({
+      apiKey: cfg.apiKey, clientId: cfg.clientId, scope: SCOPES,
+      discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4','https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+    }).then(() => {
+      gapiReady = true;
+      const auth = gapi.auth2.getAuthInstance();
+      isSignedIn = auth.isSignedIn.get();
+      updateGoogleStatus();
+      auth.isSignedIn.listen(s => { isSignedIn = s; updateGoogleStatus(); if(s) syncFromSheet(); });
+      if (isSignedIn) syncFromSheet();
+    }).catch(e => console.warn('GAPI init:', e));
+  });
+}
+function updateGoogleStatus() {
+  const el = document.getElementById('googleStatus');
+  const btn = document.getElementById('btnGoogle');
+  if (isSignedIn) {
+    el.innerHTML = '<span class="connected-dot"></span>Conectat la Google';
+    btn.textContent = '🔓 Deconectează';
+    btn.onclick = () => gapi.auth2.getAuthInstance().signOut();
+  } else {
+    el.innerHTML = '<span class="disconnected-dot"></span>Neconectat';
+    btn.textContent = '🔑 Conectează Google';
+    btn.onclick = authGoogle;
+  }
+}
+function authGoogle() {
+  saveSettings();
+  if (!gapiReady) { initGapi(); setTimeout(() => gapiReady && gapi.auth2.getAuthInstance().signIn(), 2000); return; }
+  gapi.auth2.getAuthInstance().signIn();
+}
+
+// ===== LOCAL STORAGE (backup) =====
+function loadOrdersLocal() {
+  try { orders = JSON.parse(localStorage.getItem('wpro_orders') || '[]'); } catch(e) { orders = []; }
+  renderOrders(); updateStats();
+}
+function saveOrdersLocal() { localStorage.setItem('wpro_orders', JSON.stringify(orders)); }
+
+// ===== GOOGLE SHEETS SYNC =====
+async function syncFromSheet() {
+  if (!isSignedIn || !cfg.sheetId) return;
+  try {
+    showLoading('Se sincronizează...');
+    const resp = await gapi.client.sheets.spreadsheets.values.get({ spreadsheetId: cfg.sheetId, range: 'Comenzi!A2:Z' });
+    const rows = resp.result.values || [];
+    const sheetOrders = rows.map(r => ({
+      id: r[0], date: r[1], client: r[2], invoiceNo: r[3], status: r[4],
+      notes: r[5]||'', deliveryDate: r[6]||'',
+      products: safeJson(r[7], []),
+      photos: safeJson(r[8], [])
+    })).filter(o => o.id);
+    const sheetIds = new Set(sheetOrders.map(o => o.id));
+    const localOnly = orders.filter(o => !sheetIds.has(o.id));
+    orders = [...sheetOrders, ...localOnly];
+    for (const o of localOnly) await appendToSheet(o);
+    saveOrdersLocal();
+    renderOrders(); updateStats();
+    hideLoading();
+  } catch(e) {
+    hideLoading();
+    if (e?.result?.error?.code === 400) { await initSheet(); syncFromSheet(); }
+    else console.warn('Sync err:', e);
+  }
+}
+
+async function initSheet() {
+  if (!isSignedIn || !cfg.sheetId) return;
+  await gapi.client.sheets.spreadsheets.values.update({
+    spreadsheetId: cfg.sheetId, range: 'Comenzi!A1:I1', valueInputOption: 'RAW',
+    resource: { values: [['ID','Data','Client','Nr. Doc','Status','Observatii','Data livrare','Produse JSON','Poze JSON']] }
+  });
+}
+
+async function appendToSheet(o) {
+  if (!isSignedIn || !cfg.sheetId) return;
+  await gapi.client.sheets.spreadsheets.values.append({
+    spreadsheetId: cfg.sheetId, range: 'Comenzi!A:I',
+    valueInputOption: 'RAW', insertDataOption: 'INSERT_ROWS',
+    resource: { values: [[o.id,o.date,o.client,o.invoiceNo,o.status,o.notes||'',o.deliveryDate||'',JSON.stringify(o.products||[]),JSON.stringify(o.photos||[])]] }
+  });
+}
+
+async function updateInSheet(o) {
+  if (!isSignedIn || !cfg.sheetId) return;
+  try {
+    const resp = await gapi.client.sheets.spreadsheets.values.get({ spreadsheetId: cfg.sheetId, range: 'Comenzi!A:A' });
+    const ids = (resp.result.values||[]).map(r => r[0]);
+    const rowIdx = ids.indexOf(o.id);
+    if (rowIdx < 1) { await appendToSheet(o); return; }
+    await gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: cfg.sheetId, range: `Comenzi!A${rowIdx+1}:I${rowIdx+1}`,
+      valueInputOption: 'RAW',
+      resource: { values: [[o.id,o.date,o.client,o.invoiceNo,o.status,o.notes||'',o.deliveryDate||'',JSON.stringify(o.products||[]),JSON.stringify(o.photos||[])]] }
+    });
+  } catch(e) { console.warn('Update sheet:', e); }
+}
+
+// ===== PDF EXTRACTION =====
+async function handlePDF(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (!cfg.extractorUrl) { alert('Configurează adresa extractorului în Setări!'); return; }
+  showLoading('Se extrage PDF...');
+  const fd = new FormData();
+  fd.append('pdf', file);
+  try {
+    const r = await fetch(cfg.extractorUrl + '/parse', { method: 'POST', body: fd });
+    const data = await r.json();
+    if (data.error) throw new Error(data.error);
+    hideLoading();
+    document.getElementById('clientName').value = data.client || '';
+    document.getElementById('invoiceNo').value = data.invoiceNo || '';
+    extractedProducts = data.products || [];
+    renderExtracted();
+    const el = document.getElementById('extractAlert');
+    if (extractedProducts.length > 0) {
+      el.className = 'alert alert-success';
+      document.getElementById('extractMsg').textContent = `${extractedProducts.length} produse extrase — verifică și confirmă`;
+    } else {
+      el.className = 'alert alert-warning';
+      document.getElementById('extractMsg').textContent = 'Niciun produs extras — adaugă manual';
+    }
+    document.getElementById('extractedSection').style.display = 'block';
+  } catch(e) {
+    hideLoading();
+    if (e.message.includes('fetch') || e.message.includes('Failed')) {
+      alert('❌ Nu se poate conecta la extractor.\n\nVerifică:\n1. porneste_extractor.bat rulează pe PC\n2. Adresa din Setări e corectă\n3. Ești pe același WiFi sau VPN');
+    } else {
+      alert('Eroare: ' + e.message);
+    }
+  }
+}
+
+function renderExtracted() {
+  document.getElementById('productsList').innerHTML = extractedProducts.map((p,i) => `
+    <div class="product-row">
+      <div style="flex:1;">
+        <div style="font-size:14px;font-weight:600;">${esc(p.name)}</div>
+        <div style="font-size:12px;color:var(--text-muted);">${p.qty} ${p.unit}</div>
+      </div>
+      <button onclick="extractedProducts.splice(${i},1);renderExtracted()" style="background:var(--red-light);border:none;color:var(--red);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:16px;">✕</button>
+    </div>`).join('') || '<div style="color:var(--text-muted);padding:8px 0;">Niciun produs. Adaugă manual.</div>';
+}
+
+function openAddProduct() {
+  document.getElementById('newProdName').value = '';
+  document.getElementById('newProdQty').value = '';
+  document.getElementById('addProductModal').classList.add('active');
+}
+function confirmAddProduct() {
+  const name = document.getElementById('newProdName').value.trim();
+  const qty = parseInt(document.getElementById('newProdQty').value) || 1;
+  const unit = document.getElementById('newProdUnit').value;
+  if (!name) return;
+  extractedProducts.push({ name, qty, unit, checked: false });
+  renderExtracted();
+  document.getElementById('addProductModal').classList.remove('active');
+}
+
+async function createOrder() {
+  const client = document.getElementById('clientName').value.trim();
+  const invoiceNo = document.getElementById('invoiceNo').value.trim();
+  const notes = document.getElementById('orderNotes').value.trim();
+  const deliveryDate = document.getElementById('deliveryDate').value;
+  if (!client) { alert('Completează clientul!'); return; }
+  if (!extractedProducts.length) { alert('Adaugă cel puțin un produs!'); return; }
+  showLoading('Se salvează comanda...');
+  const order = {
+    id: genId(), date: new Date().toISOString().split('T')[0],
+    client, invoiceNo, notes, deliveryDate, status: 'pending',
+    products: extractedProducts.map(p => ({...p, checked: false, id: genId()})),
+    photos: [], createdAt: new Date().toISOString()
+  };
+  orders.unshift(order);
+  saveOrdersLocal();
+  if (isSignedIn && cfg.sheetId) await appendToSheet(order);
+  hideLoading();
+  document.getElementById('extractedSection').style.display = 'none';
+  document.getElementById('pdfInput').value = '';
+  extractedProducts = [];
+  document.getElementById('clientName').value = '';
+  document.getElementById('invoiceNo').value = '';
+  document.getElementById('orderNotes').value = '';
+  document.getElementById('deliveryDate').value = '';
+  updateStats(); renderOrders(); showPage('orders');
+  setTimeout(() => openOrder(order.id), 300);
+}
+
+// ===== ORDERS RENDER =====
+function renderOrders() {
+  const container = document.getElementById('ordersList');
+  const sf = document.getElementById('filterStatus').value;
+  const df = document.getElementById('filterDate').value;
+  let list = [...orders];
+  if (sf !== 'all') list = list.filter(o => o.status === sf);
+  if (df) list = list.filter(o => o.date === df);
+  if (!list.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">Nicio comandă</div><div class="empty-sub">Adaugă din tab-ul PDF Nou</div></div>`;
+    return;
+  }
+  container.innerHTML = list.map(o => {
+    const done = (o.products||[]).filter(p => p.checked).length;
+    const total = (o.products||[]).length;
+    const pct = total > 0 ? Math.round(done/total*100) : 0;
+    const sc = statusCfg(o.status);
+    const done2 = o.status==='ready'||o.status==='shipped';
+    return `<div class="order-card ${done2?'done':''}" onclick="openOrder('${o.id}')">
+      <div class="order-header">
+        <div>
+          <div class="order-client">${esc(o.client)}</div>
+          <div class="order-meta">${o.invoiceNo?`<span class="tag">${esc(o.invoiceNo)}</span>`:''}${o.deliveryDate?` 🚚 ${fmtDate(o.deliveryDate)}`:''}${o.notes?` · ${esc(o.notes)}`:''}</div>
+        </div>
+        <span class="badge badge-${o.status}">${sc.label}</span>
+      </div>
+      <div class="order-footer">
+        <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);">
+          <div class="progress-bar"><div class="progress-fill ${pct===100?'complete':''}" style="width:${pct}%"></div></div>
+          <span>${done}/${total}</span>
+        </div>
+        <span style="font-size:12px;color:var(--text-muted);">📷 ${(o.photos||[]).length}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateStats() {
+  const today = new Date().toISOString().split('T')[0];
+  const tod = orders.filter(o => o.date === today);
+  document.getElementById('stat-total').textContent = tod.length;
+  document.getElementById('stat-done').textContent = tod.filter(o => o.status==='ready'||o.status==='shipped').length;
+  document.getElementById('stat-packing').textContent = tod.filter(o => o.status==='packing').length;
+  document.getElementById('stat-pending').textContent = tod.filter(o => o.status==='pending').length;
+}
+
+function statusCfg(s) {
+  return {pending:{label:'În așteptare'},packing:{label:'În pregătire'},ready:{label:'Gata ✓'},shipped:{label:'Expediat'}}[s]||{label:s};
+}
+
+// ===== ORDER DETAIL =====
+function openOrder(id) {
+  currentOrderId = id;
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  document.getElementById('detailTitle').textContent = o.client;
+  document.getElementById('detailBadge').innerHTML = `<span class="badge badge-${o.status}" style="font-size:11px;">${statusCfg(o.status).label}</span>`;
+  renderDetail(o);
+  document.getElementById('detailOverlay').classList.add('active');
+}
+
+function renderDetail(o) {
+  const done = (o.products||[]).filter(p => p.checked).length;
+  const total = (o.products||[]).length;
+  const allOk = done === total && total > 0;
+  const pct = total > 0 ? Math.round(done/total*100) : 0;
+  document.getElementById('detailContent').innerHTML = `
+    ${o.invoiceNo?`<div class="alert alert-info"><span>📄</span><span><strong>${esc(o.invoiceNo)}</strong> · ${fmtDate(o.date)}${o.deliveryDate?` · 🚚 ${fmtDate(o.deliveryDate)}`:''}</span></div>`:''}
+    ${o.notes?`<div class="alert alert-warning"><span>⚠️</span><span>${esc(o.notes)}</span></div>`:''}
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="card-title" style="margin:0;">CHECKLIST PRODUSE</div>
+        <span style="font-size:13px;font-weight:700;color:${allOk?'var(--green)':'var(--blue)'}">${done}/${total}</span>
+      </div>
+      <div class="progress-bar" style="width:100%;height:8px;margin-bottom:16px;">
+        <div class="progress-fill ${allOk?'complete':''}" style="width:${pct}%;height:8px;"></div>
+      </div>
+      ${(o.products||[]).map((p,i)=>`
+        <div class="checklist-item ${p.checked?'checked':''}" onclick="toggleItem(${i})">
+          <div class="checkbox ${p.checked?'checked':''}">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8l3.5 3.5L13 4.5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div style="flex:1;"><div class="item-name">${esc(p.name)}</div></div>
+          <div class="qty-badge">${p.qty}<span style="font-size:11px;font-weight:400;margin-left:2px;">${p.unit}</span></div>
+        </div>`).join('')}
+      ${allOk?`<div class="alert alert-success" style="margin-top:12px;"><span>🎉</span><span><strong>Toate bifate!</strong> Fă pozele și marchează Gata.</span></div>`:''}
+    </div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">POZE COLETE (${(o.photos||[]).length})</div>
+      <div class="photo-grid">
+        ${(o.photos||[]).map((ph,i)=>`
+          <div class="photo-thumb">
+            <img src="${ph.url}" onclick="window.open('${ph.url}','_blank')" loading="lazy">
+            <button class="photo-delete" onclick="event.stopPropagation();deletePhoto(${i})">✕</button>
+          </div>`).join('')}
+        <label class="add-photo-btn" for="photoInput"><span style="font-size:28px;">📷</span><span>Adaugă</span></label>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" multiple capture="environment" style="display:none" onchange="uploadPhotos(this)">
+    </div>
+    <div class="card" style="margin-bottom:12px;">
+      <div class="card-title">STATUS</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        ${['pending','packing','ready','shipped'].map(s=>{
+          const sc=statusCfg(s);
+          return `<button onclick="changeStatus('${s}')" class="btn ${o.status===s?'btn-primary':'btn-ghost'}" style="flex:1;min-width:90px;font-size:13px;">${s==='pending'?'⏳':s==='packing'?'📦':s==='ready'?'✅':'🚚'} ${sc.label}</button>`;
+        }).join('')}
+      </div>
+    </div>
+    <button class="btn btn-danger btn-full" onclick="deleteOrder()" style="margin-bottom:30px;">🗑️ Șterge comanda</button>
+  `;
+}
+
+async function toggleItem(idx) {
+  const o = orders.find(x => x.id === currentOrderId);
+  if (!o) return;
+  o.products[idx].checked = !o.products[idx].checked;
+  if (o.products[idx].checked && o.status === 'pending') o.status = 'packing';
+  saveOrdersLocal();
+  if (isSignedIn && cfg.sheetId) updateInSheet(o).catch(()=>{});
+  renderDetail(o); updateStats(); renderOrders();
+}
+
+async function changeStatus(s) {
+  const o = orders.find(x => x.id === currentOrderId);
+  if (!o) return;
+  if (s === 'ready' || s === 'shipped') {
+    const done = (o.products||[]).filter(p => p.checked).length;
+    const total = (o.products||[]).length;
+    if (done < total) {
+      const missing = (o.products||[]).filter(p=>!p.checked).map(p=>`• ${p.qty} ${p.unit} ${p.name}`).join('\n');
+      alert(`⛔ Mai ai ${total-done} produs${total-done>1?'e':''} nebifat${total-done>1?'e':''}:\n\n${missing}`);
+      return;
+    }
+    if (!(o.photos||[]).length && s==='ready') {
+      if (!confirm('⚠️ Nu ai poze. Continui?')) return;
+    }
+  }
+  o.status = s;
+  saveOrdersLocal();
+  if (isSignedIn && cfg.sheetId) updateInSheet(o).catch(()=>{});
+  document.getElementById('detailBadge').innerHTML = `<span class="badge badge-${s}" style="font-size:11px;">${statusCfg(s).label}</span>`;
+  renderDetail(o); updateStats(); renderOrders();
+}
+
+// ===== PHOTOS - COMPRESSED =====
+async function compressImage(file, maxWidth=1200, quality=0.75) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(blob => resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), {type:'image/jpeg'})), 'image/jpeg', quality);
+    };
+    img.src = url;
+  });
+}
+
+async function uploadToDrive(file, orderId) {
+  const token = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+  const metadata = { name: `${orderId}_${Date.now()}_${file.name}`, parents: [cfg.driveFolderId] };
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
+  form.append('file', file);
+  const resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
+    method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: form
+  });
+  const data = await resp.json();
+  await gapi.client.drive.permissions.create({ fileId: data.id, resource: {role:'reader',type:'anyone'} });
+  return `https://drive.google.com/uc?id=${data.id}&export=view`;
+}
+
+async function uploadPhotos(input) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  const o = orders.find(x => x.id === currentOrderId);
+  if (!o) return;
+  showLoading(`Se compresează și uploadează ${files.length} poze...`);
+  for (const f of files) {
+    try {
+      const compressed = await compressImage(f);
+      const origKB = Math.round(f.size/1024);
+      const compKB = Math.round(compressed.size/1024);
+      console.log(`Compresie: ${origKB}KB → ${compKB}KB`);
+      let url;
+      if (isSignedIn && cfg.driveFolderId) {
+        url = await uploadToDrive(compressed, o.id);
+      } else {
+        // Fallback: base64 local
+        url = await fileToBase64(compressed);
+      }
+      if (!o.photos) o.photos = [];
+      o.photos.push({ url, name: f.name });
+    } catch(e) { console.warn('Photo err:', e); }
+  }
+  saveOrdersLocal();
+  if (isSignedIn && cfg.sheetId) updateInSheet(o).catch(()=>{});
+  hideLoading();
+  renderDetail(o);
+  input.value = '';
+}
+
+async function deletePhoto(idx) {
+  if (!confirm('Ștergi poza?')) return;
+  const o = orders.find(x => x.id === currentOrderId);
+  if (!o) return;
+  o.photos.splice(idx, 1);
+  saveOrdersLocal();
+  if (isSignedIn && cfg.sheetId) updateInSheet(o).catch(()=>{});
+  renderDetail(o);
+}
+
+async function deleteOrder() {
+  if (!confirm('Ștergi comanda?')) return;
+  orders = orders.filter(o => o.id !== currentOrderId);
+  saveOrdersLocal();
+  updateStats(); renderOrders(); closeDetail();
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('active');
+  currentOrderId = null;
+}
 
 // ===== UTILS =====
-function escHtml(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function formatDate(str) {
-  if (!str) return '';
-  const [y,m,d] = str.split('-');
-  return `${d}.${m}.${y}`;
-}
-
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(s) { if(!s) return ''; const [y,m,d]=s.split('-'); return `${d}.${m}.${y}`; }
+function genId() { return Date.now().toString(36)+Math.random().toString(36).substr(2,5); }
+function safeJson(s,def) { try{return JSON.parse(s||'null')||def}catch{return def} }
 function fileToBase64(file) {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
+  return new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
 }
 
-function fileToBase64WithPrefix(file) {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
-}
-
-function showLoading(text) {
-  document.getElementById('loadingText').textContent = text;
-  document.getElementById('loadingOverlay').classList.add('active');
-}
-
-function hideLoading() {
-  document.getElementById('loadingOverlay').classList.remove('active');
-}
-
-function exportLocalData() {
-  const blob = new Blob([JSON.stringify({ orders, config: { ...config, apiKey: '***', clientId: '***' } }, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `wpro_comenzi_${new Date().toISOString().split('T')[0]}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function clearAllData() {
-  if (!confirm('Ștergi TOATE datele locale? Datele din Google Sheets rămân.')) return;
-  localStorage.removeItem('wpro_orders');
-  orders = [];
-  renderOrders();
-  updateStats();
-}
+// Drag & drop PDF
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f && f.type==='application/pdf') {
+    const dt = new DataTransfer(); dt.items.add(f);
+    document.getElementById('pdfInput').files = dt.files;
+    handlePDF(document.getElementById('pdfInput'));
+  }
+});
 </script>
 </body>
 </html>
