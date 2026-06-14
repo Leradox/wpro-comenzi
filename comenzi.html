@@ -151,6 +151,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .setup-sub{font-size:13px;color:var(--text-muted);margin-bottom:16px}
 </style>
 <script src="https://apis.google.com/js/api.js"></script>
+<script src="https://accounts.google.com/gsi/client" async></script>
 </head>
 <body>
 
@@ -358,6 +359,8 @@ let currentOrderId = null;
 let extractedProducts = [];
 let gapiReady = false;
 let isSignedIn = false;
+let accessToken = null;
+let tokenClient = null;
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
 
 // ===== SETTINGS =====
@@ -453,37 +456,75 @@ function hideLoading() { document.getElementById('loading').classList.remove('ac
 // ===== GOOGLE API =====
 function initGapi() {
   if (!cfg.apiKey || !cfg.clientId) return;
-  gapi.load('client:auth2', () => {
-    gapi.client.init({
-      apiKey: cfg.apiKey, clientId: cfg.clientId, scope: SCOPES,
+  // Load GAPI client for Sheets/Drive API calls
+  gapi.load('client', () => {
+    gapi.client.init({ apiKey: cfg.apiKey,
       discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4','https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
     }).then(() => {
       gapiReady = true;
-      const auth = gapi.auth2.getAuthInstance();
-      isSignedIn = auth.isSignedIn.get();
+      // Init Google Identity Services token client
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: cfg.clientId,
+        scope: SCOPES,
+        callback: (resp) => {
+          if (resp.error) { console.warn('Token err:', resp); return; }
+          accessToken = resp.access_token;
+          isSignedIn = true;
+          gapi.client.setToken({ access_token: accessToken });
+          updateGoogleStatus();
+          syncFromSheet();
+        }
+      });
+      // Check if we have a cached token
+      const cached = localStorage.getItem('wpro_gtoken');
+      if (cached) {
+        try {
+          const t = JSON.parse(cached);
+          if (t.expires > Date.now()) {
+            accessToken = t.token;
+            isSignedIn = true;
+            gapi.client.setToken({ access_token: accessToken });
+            updateGoogleStatus();
+            syncFromSheet();
+          }
+        } catch(e) {}
+      }
       updateGoogleStatus();
-      auth.isSignedIn.listen(s => { isSignedIn = s; updateGoogleStatus(); if(s) syncFromSheet(); });
-      if (isSignedIn) syncFromSheet();
     }).catch(e => console.warn('GAPI init:', e));
   });
 }
+
 function updateGoogleStatus() {
   const el = document.getElementById('googleStatus');
   const btn = document.getElementById('btnGoogle');
   if (isSignedIn) {
     el.innerHTML = '<span class="connected-dot"></span>Conectat la Google';
     btn.textContent = '🔓 Deconectează';
-    btn.onclick = () => gapi.auth2.getAuthInstance().signOut();
+    btn.onclick = signOutGoogle;
   } else {
     el.innerHTML = '<span class="disconnected-dot"></span>Neconectat';
     btn.textContent = '🔑 Conectează Google';
     btn.onclick = authGoogle;
   }
 }
+
 function authGoogle() {
   saveSettings();
-  if (!gapiReady) { initGapi(); setTimeout(() => gapiReady && gapi.auth2.getAuthInstance().signIn(), 2000); return; }
-  gapi.auth2.getAuthInstance().signIn();
+  if (!gapiReady) {
+    initGapi();
+    setTimeout(() => { if (tokenClient) tokenClient.requestAccessToken(); }, 2000);
+    return;
+  }
+  if (tokenClient) tokenClient.requestAccessToken();
+}
+
+function signOutGoogle() {
+  if (accessToken) google.accounts.oauth2.revoke(accessToken, () => {});
+  accessToken = null;
+  isSignedIn = false;
+  localStorage.removeItem('wpro_gtoken');
+  gapi.client.setToken(null);
+  updateGoogleStatus();
 }
 
 // ===== LOCAL STORAGE (backup) =====
@@ -808,7 +849,7 @@ async function compressImage(file, maxWidth=1200, quality=0.75) {
 }
 
 async function uploadToDrive(file, orderId) {
-  const token = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
+  const token = accessToken;
   const metadata = { name: `${orderId}_${Date.now()}_${file.name}`, parents: [cfg.driveFolderId] };
   const form = new FormData();
   form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
